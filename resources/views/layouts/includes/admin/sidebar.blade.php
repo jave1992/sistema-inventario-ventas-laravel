@@ -79,7 +79,7 @@
         [
             'name' => 'Movimientos',
             'icon' => 'fa-solid fa-exchange-alt',
-            'active' => [request()->routeIs('admin.movements.*')],
+            'active' => [request()->routeIs('admin.movements.*'), request()->routeIs('admin.transfers.*')],
             'submenu' => [
                 [
                     'name' => 'Entradas y Salidas',
@@ -88,8 +88,8 @@
                 ],
                 [
                     'name' => 'Transferencias',
-                    'href' => '',
-                    'active' => false,
+                    'href' => route('admin.transfers.index'),
+                    'active' => request()->routeIs('admin.transfers.*'),
                 ],
             ],
         ],

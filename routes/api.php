@@ -16,6 +16,9 @@ Route::post('/warehouses', function (Request $request) {
             $query->where('name', 'like', '%{$search}%')
                 ->orWhere('location', 'like', '%{$search%}');
         })
+        ->when($request->exists('exclude'), function ($query) use ($request) {
+            $query->where('id', '!=', $request->input('exclude'));
+        })
         ->when($request->exists('selected'), fn($query) => $query->whereIn('id', $request->input('selected')), fn($query) => $query->limit(10))
         ->get();
 })->name('api.warehouses.index');
