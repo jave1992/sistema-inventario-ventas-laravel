@@ -65,9 +65,9 @@ class SaleCreate extends Component
                     ];
                 })->toArray();
             } else {
-                $this->voucher_type = 1;
-                $this->customer_id = null;
-                $this->products = [];
+                $this->reset('voucher_type');
+                $this->reset('customer_id');
+                $this->reset('products');
             }
         }
     }

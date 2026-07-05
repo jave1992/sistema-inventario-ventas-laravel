@@ -22,7 +22,7 @@
     <x-wire-card>
         <form wire:submit="save" class="space-y-4">
             <div class="grid lg:grid-cols-4 gap-4">
-                <x-wire-native-select label="Tipo de movimiento" wire:model="type">
+                <x-wire-native-select label="Tipo de movimiento" wire:model.live="type">
                     <option value="1">Ingreso</option>
                     <option value="2">Salida</option>
                 </x-wire-native-select>
@@ -34,14 +34,24 @@
                     disabled></x-wire-input>
 
                 <x-wire-input label="Fecha" wire:model="date" type="date"></x-wire-input>
-            </div>
 
-            <x-wire-select label="Almacén" wire:model="warehouse_id" placeholder="Seleccione un almacén"
-                :async-data="[
-                    'api' => route('api.warehouses.index'),
-                    'method' => 'POST',
-                ]" option-label="name" option-value="id"
-                option-description="description"></x-wire-select>
+                <x-wire-select class="lg:col-span-2" label="Almacén" wire:model="warehouse_id"
+                    placeholder="Seleccione un almacén" :async-data="[
+                        'api' => route('api.warehouses.index'),
+                        'method' => 'POST',
+                    ]" option-label="name" option-value="id"
+                    option-description="description"></x-wire-select>
+
+                <x-wire-select class="lg:col-span-2" label="Motivo" wire:model="reason_id"
+                    placeholder="Seleccione un motivo" :async-data="[
+                        'api' => route('api.reasons.index'),
+                        'method' => 'POST',
+                        'params' => [
+                            'type' => $this->type,
+                        ],
+                    ]" option-label="name" option-value="id"
+                    option-description="description"></x-wire-select>
+            </div>
 
             <div class="lg:flex lg:space-x-4">
                 <x-wire-select label="Producto" wire:model="product_id" placeholder="Seleccione un producto"

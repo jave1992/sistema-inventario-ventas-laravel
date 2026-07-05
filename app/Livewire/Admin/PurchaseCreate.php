@@ -65,9 +65,9 @@ class PurchaseCreate extends Component
                     ];
                 })->toArray();
             } else {
-                $this->voucher_type = 1;
-                $this->supplier_id = null;
-                $this->products = [];
+                $this->reset('voucher_type');
+                $this->reset('supplier_id');
+                $this->reset('products');
             }
         }
     }

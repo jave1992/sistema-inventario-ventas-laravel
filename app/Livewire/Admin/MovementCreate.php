@@ -4,7 +4,6 @@ namespace App\Livewire\Admin;
 
 use App\Models\Movement;
 use App\Models\Product;
-use App\Models\Quote;
 use Livewire\Component;
 
 class MovementCreate extends Component
@@ -19,6 +18,8 @@ class MovementCreate extends Component
 
     public $product_id;
     public $products = [];
+
+    public $reason_id;
 
     public function boot()
     {
@@ -47,6 +48,13 @@ class MovementCreate extends Component
     public function mount()
     {
         $this->correlative = Movement::max('correlative') + 1;
+    }
+
+    public function updated($property, $value)
+    {
+        if ($property === 'type') {
+            $this->reset('reason_id');
+        }
     }
 
     public function addProduct()
@@ -90,11 +98,12 @@ class MovementCreate extends Component
     public function save()
     {
         $this->validate([
-            'voucher_type' => 'required|in:1,2',
+            'type' => 'required|in:1,2',
             'serie' => 'required|string|max:10',
             'correlative' => 'required|numeric|min:1',
             'date' => 'nullable|date',
-            'customer_id' => 'required|exists:customers,id',
+            'warehouse_id' => 'required|exists:warehouses,id',
+            'reason_id' => 'required|exists:reasons,id',
             'total' => 'required|numeric|min:0',
             'observation' => 'nullable|string|max:255',
             'products' => 'required|array|min:1',
@@ -102,28 +111,30 @@ class MovementCreate extends Component
             'products.*.quantity' => 'required|numeric|min:1',
             'products.*.price' => 'required|numeric|min:0',
         ], [], [
-            'voucher_type' => 'tipo de comprobante',
+            'type' => 'tipo de movimiento',
             'serie' => 'serie',
             'correlative' => 'correlativo',
-            'customer_id' => 'cliente',
+            'warehouse_id' => 'almacén',
+            'reason_id' => 'motivo',
             'observation' => 'observación',
             'products.*.id' => 'producto',
             'products.*.quantity' => 'cantidad',
             'products.*.price' => 'precio',
         ]);
 
-        $quote = Quote::create([
-            'voucher_type' => $this->voucher_type,
+        $movement = Movement::create([
+            'type' => $this->type,
             'serie' => $this->serie,
             'correlative' => $this->correlative,
             'date' => $this->date ?? now(),
-            'customer_id' => $this->customer_id,
+            'warehouse_id' => $this->warehouse_id,
             'total' => $this->total,
             'observation' => $this->observation,
+            'reason_id' => $this->reason_id,
         ]);
 
         foreach ($this->products as $product) {
-            $quote->products()->attach($product['id'], [
+            $movement->products()->attach($product['id'], [
                 'quantity' => $product['quantity'],
                 'price' => $product['price'],
                 'subtotal' => $product['quantity'] * $product['price'],
@@ -133,9 +144,9 @@ class MovementCreate extends Component
         session()->flash('swal', [
             'icon' => 'success',
             'title' => '¡Bien hecho!',
-            'text' => 'Cotización creada exitosamente.',
+            'text' => 'Movimiento creado exitosamente.',
         ]);
 
-        return redirect()->route('admin.quotes.index');
+        return redirect()->route('admin.movements.index');
     }
 }

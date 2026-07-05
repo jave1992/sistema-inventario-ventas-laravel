@@ -16,6 +16,10 @@ class Transfer extends Model
         'destination_warehouse_id'
     ];
 
+    protected $casts = [
+        'date' => 'datetime'
+    ];
+
     // Relación uno a muchos inversa
     public function originWarehouse()
     {
