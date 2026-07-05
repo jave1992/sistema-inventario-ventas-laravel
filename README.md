@@ -1,1 +1,3 @@
-"# sistema-inventario-ventas-laravel" 
+# sistema-inventario-ventas-laravel
+
+Sistema de inventario y ventas con laravel.
