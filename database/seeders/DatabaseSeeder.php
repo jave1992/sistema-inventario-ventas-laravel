@@ -1,0 +1,42 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Customer;
+use App\Models\Product;
+use App\Models\Supplier;
+use App\Models\User;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+
+class DatabaseSeeder extends Seeder
+{
+    use WithoutModelEvents;
+
+    /**
+     * Seed the application's database.
+     */
+    public function run(): void
+    {
+        // User::factory(10)->create();
+
+        User::factory()->create([
+            'name' => 'Jair Vasquez',
+            'email' => 'jair1624@gmail.com',
+            'password' => bcrypt('12345678')
+        ]);
+
+        $this->call([
+            IdentitySeeder::class,
+            CategorySeeder::class,
+            WarehouseSeeder::class,
+            ReasonSeeeder::class
+        ]);
+
+        Customer::factory(50)->create();
+
+        Supplier::factory(50)->create();
+
+        Product::factory(100)->create();
+    }
+}
