@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin;
 
+use App\Models\Inventory;
 use App\Models\Movement;
 use App\Models\Product;
 use Livewire\Component;
@@ -60,8 +61,10 @@ class MovementCreate extends Component
     public function addProduct()
     {
         $this->validate([
+            'warehouse_id' => 'required|exists:warehouses,id',
             'product_id' => 'required|exists:products,id',
         ], [], [
+            'warehouse_id' => 'almacén',
             'product_id' => 'producto',
         ]);
 
@@ -79,12 +82,20 @@ class MovementCreate extends Component
 
         $product = Product::find($this->product_id, '*');
 
+        $lastRecord = Inventory::select('*')
+            ->where('product_id', $product->id)
+            ->where('warehouse_id', $this->warehouse_id)
+            ->latest('id')
+            ->first();
+
+        $costBalance = $lastRecord?->cost_balance ?? 0;
+
         $this->products[] = [
             'id' => $product->id,
             'name' => $product->name,
             'quantity' => 1,
-            'price' => $product->price,
-            'subtotal' => $product->price,
+            'price' => $costBalance,
+            'subtotal' => $costBalance,
         ];
 
         $this->reset('product_id');
@@ -139,6 +150,45 @@ class MovementCreate extends Component
                 'price' => $product['price'],
                 'subtotal' => $product['quantity'] * $product['price'],
             ]);
+
+            // Kardex
+            $lastRecord = Inventory::select('*')
+                ->where('product_id', $product['id'])
+                ->where('warehouse_id', $this->warehouse_id)
+                ->latest('id')
+                ->first();
+
+            $lastQuantityBalance = $lastRecord?->quantity_balance ?? 0;
+            $lastTotalBalance = $lastRecord?->total_balance ?? 0;
+
+            $inventory = new Inventory();
+            $inventory->product_id = $product['id'];
+            $inventory->warehouse_id = $this->warehouse_id;
+            $inventory->inventoryable_id = $movement->id;
+            $inventory->inventoryable_type = Movement::class;
+            $inventory->detail = 'Movimiento';
+
+            if ($this->type == 1) {
+                $newQuantityBalance = $lastQuantityBalance + $product['quantity'];
+                $newTotalBalance = $lastTotalBalance + ($product['quantity'] * $product['price']);
+
+                $inventory->quantity_in = $product['quantity'];
+                $inventory->cost_in = $product['price'];
+                $inventory->total_in = $product['quantity'] * $product['price'];
+            } else if ($this->type == 2) {
+                $newQuantityBalance = $lastQuantityBalance - $product['quantity'];
+                $newTotalBalance = $lastTotalBalance - ($product['quantity'] * $product['price']);
+
+                $inventory->quantity_out = $product['quantity'];
+                $inventory->cost_out = $product['price'];
+                $inventory->total_out = $product['quantity'] * $product['price'];
+            }
+
+            $inventory->quantity_balance = $newQuantityBalance;
+            $inventory->cost_balance = $newTotalBalance / ($newQuantityBalance ?: 1);
+            $inventory->total_balance = $newTotalBalance;
+
+            $inventory->save();
         }
 
         session()->flash('swal', [
