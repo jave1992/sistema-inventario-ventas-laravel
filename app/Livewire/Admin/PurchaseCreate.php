@@ -6,6 +6,7 @@ use App\Models\Inventory;
 use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\PurchaseOrder;
+use App\Services\KardexService;
 use Livewire\Component;
 
 class PurchaseCreate extends Component
@@ -111,7 +112,7 @@ class PurchaseCreate extends Component
         return view('livewire.admin.purchase-create');
     }
 
-    public function save()
+    public function save(KardexService $kardexService)
     {
         $this->validate([
             'voucher_type' => 'required|in:1,2',
@@ -160,32 +161,8 @@ class PurchaseCreate extends Component
             ]);
 
             // Kardex
-            $lastRecord = Inventory::select('*')
-                ->where('product_id', $product['id'])
-                ->where('warehouse_id', $this->warehouse_id)
-                ->latest('id')
-                ->first();
 
-            $lastQuantityBalance = $lastRecord?->quantity_balance ?? 0;
-            $lastTotalBalance = $lastRecord?->total_balance ?? 0;
-
-            $newQuantityBalance = $lastQuantityBalance + $product['quantity'];
-            $newTotalBalance = $lastTotalBalance + ($product['quantity'] * $product['price']);
-            $newCostBalance = $newTotalBalance / $newQuantityBalance;
-
-            $purchase->inventories()->create([
-                'detail' => 'Compra',
-                'quantity_in' => $product['quantity'],
-                'cost_in' => $product['price'],
-                'total_in' => $product['quantity'] * $product['price'],
-                'quantity_balance' => $newQuantityBalance,
-                'cost_balance' => $newCostBalance,
-                'total_balance' => $newTotalBalance,
-                'product_id' => $product['id'],
-                'warehouse_id' => $this->warehouse_id,
-                'inventoryable_id' => $purchase->id,
-                'inventoryable_type' => Purchase::class
-            ]);
+            $kardexService->registerEntry($purchase, $product, $this->warehouse_id, 'Compra');
         }
 
         session()->flash('swal', [

@@ -6,6 +6,7 @@ use App\Models\Inventory;
 use App\Models\Product;
 use App\Models\Quote;
 use App\Models\Sale;
+use App\Services\KardexService;
 use Livewire\Component;
 
 class SaleCreate extends Component
@@ -116,7 +117,7 @@ class SaleCreate extends Component
         return view('livewire.admin.sale-create');
     }
 
-    public function save()
+    public function save(KardexService $kardexService)
     {
         $this->validate([
             'voucher_type' => 'required|in:1,2',
@@ -165,33 +166,8 @@ class SaleCreate extends Component
             ]);
 
             // Kardex
-            $lastRecord = Inventory::select('*')
-                ->where('product_id', $product['id'])
-                ->where('warehouse_id', $this->warehouse_id)
-                ->latest('id')
-                ->first();
 
-            $lastQuantityBalance = $lastRecord?->quantity_balance ?? 0;
-            $lastTotalBalance = $lastRecord?->total_balance ?? 0;
-            $lastCostBalance = $lastRecord?->cost_balance ?? 0;
-
-            $newQuantityBalance = $lastQuantityBalance - $product['quantity'];
-            $newTotalBalance = $lastTotalBalance - ($product['quantity'] * $lastCostBalance);
-            $newCostBalance = $newTotalBalance / ($newQuantityBalance ?: 1); // Evitar división por cero
-
-            $sale->inventories()->create([
-                'detail' => 'Venta',
-                'quantity_out' => $product['quantity'],
-                'cost_out' => $lastCostBalance,
-                'total_out' => $product['quantity'] * $lastCostBalance,
-                'quantity_balance' => $newQuantityBalance,
-                'cost_balance' => $newCostBalance,
-                'total_balance' => $newTotalBalance,
-                'product_id' => $product['id'],
-                'warehouse_id' => $this->warehouse_id,
-                'inventoryable_id' => $sale->id,
-                'inventoryable_type' => Sale::class
-            ]);
+            $kardexService->registerExit($sale, $product, $this->warehouse_id, 'Venta');
         }
 
         session()->flash('swal', [
