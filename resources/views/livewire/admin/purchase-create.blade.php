@@ -56,7 +56,7 @@
                             'api' => route('api.warehouses.index'),
                             'method' => 'POST',
                         ]" option-label="name" option-value="id"
-                        option-description="description"></x-wire-select>
+                        option-description="description" :disabled="count($this->products) > 0"></x-wire-select>
                 </div>
             </div>
 

@@ -2,11 +2,10 @@
 
 namespace App\Livewire\Admin;
 
-use App\Models\Inventory;
+use App\Facades\Kardex;
 use App\Models\Product;
 use App\Models\Quote;
 use App\Models\Sale;
-use App\Services\KardexService;
 use Livewire\Component;
 
 class SaleCreate extends Component
@@ -117,7 +116,7 @@ class SaleCreate extends Component
         return view('livewire.admin.sale-create');
     }
 
-    public function save(KardexService $kardexService)
+    public function save()
     {
         $this->validate([
             'voucher_type' => 'required|in:1,2',
@@ -167,7 +166,7 @@ class SaleCreate extends Component
 
             // Kardex
 
-            $kardexService->registerExit($sale, $product, $this->warehouse_id, 'Venta');
+            Kardex::registerExit($sale, $product, $this->warehouse_id, 'Venta');
         }
 
         session()->flash('swal', [

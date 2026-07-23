@@ -2,11 +2,10 @@
 
 namespace App\Livewire\Admin;
 
-use App\Models\Inventory;
+use App\Facades\Kardex;
 use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\PurchaseOrder;
-use App\Services\KardexService;
 use Livewire\Component;
 
 class PurchaseCreate extends Component
@@ -77,8 +76,10 @@ class PurchaseCreate extends Component
     public function addProduct()
     {
         $this->validate([
+            'warehouse_id' => 'required|exists:warehouses,id',
             'product_id' => 'required|exists:products,id',
         ], [], [
+            'warehouse_id' => 'almacén',
             'product_id' => 'producto',
         ]);
 
@@ -96,12 +97,14 @@ class PurchaseCreate extends Component
 
         $product = Product::find($this->product_id, '*');
 
+        $lastRecord = Kardex::getLastRecord($product->id, $this->warehouse_id);
+        
         $this->products[] = [
             'id' => $product->id,
             'name' => $product->name,
             'quantity' => 1,
-            'price' => 0,
-            'subtotal' => 0,
+            'price' => $lastRecord['cost'],
+            'subtotal' => $lastRecord['cost'],
         ];
 
         $this->reset('product_id');
@@ -112,7 +115,7 @@ class PurchaseCreate extends Component
         return view('livewire.admin.purchase-create');
     }
 
-    public function save(KardexService $kardexService)
+    public function save()
     {
         $this->validate([
             'voucher_type' => 'required|in:1,2',
@@ -162,7 +165,7 @@ class PurchaseCreate extends Component
 
             // Kardex
 
-            $kardexService->registerEntry($purchase, $product, $this->warehouse_id, 'Compra');
+            Kardex::registerEntry($purchase, $product, $this->warehouse_id, 'Compra');
         }
 
         session()->flash('swal', [

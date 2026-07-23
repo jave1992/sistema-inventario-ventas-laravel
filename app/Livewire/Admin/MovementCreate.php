@@ -2,10 +2,10 @@
 
 namespace App\Livewire\Admin;
 
+use App\Facades\Kardex;
 use App\Models\Inventory;
 use App\Models\Movement;
 use App\Models\Product;
-use App\Services\KardexService;
 use Livewire\Component;
 
 class MovementCreate extends Component
@@ -107,7 +107,7 @@ class MovementCreate extends Component
         return view('livewire.admin.movement-create');
     }
 
-    public function save(KardexService $kardexService)
+    public function save()
     {
         $this->validate([
             'type' => 'required|in:1,2',
@@ -155,9 +155,9 @@ class MovementCreate extends Component
             // Kardex
 
             if ($this->type == 1) {
-                $kardexService->registerEntry($movement, $product, $this->warehouse_id, 'Movimiento');
+                Kardex::registerEntry($movement, $product, $this->warehouse_id, 'Movimiento');
             } else if ($this->type == 2) {
-                $kardexService->registerExit($movement, $product, $this->warehouse_id, 'Movimiento');
+                Kardex::registerExit($movement, $product, $this->warehouse_id, 'Movimiento');
             }
         }
 
