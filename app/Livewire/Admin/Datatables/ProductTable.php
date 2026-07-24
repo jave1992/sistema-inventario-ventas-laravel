@@ -37,6 +37,7 @@ class ProductTable extends DataTableComponent
                 ->searchable()
                 ->sortable(),
             Column::make('Precio', 'price'),
+            Column::make('Stock', 'stock')->sortable(),
             Column::make('Acciones')
                 ->label(function ($row) {
                     return view('admin.products.actions', ['product' => $row]);
