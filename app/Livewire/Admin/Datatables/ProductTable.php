@@ -2,10 +2,12 @@
 
 namespace App\Livewire\Admin\Datatables;
 
+use App\Models\Inventory;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 use Rappasoft\LaravelLivewireTables\Views\Columns\ImageColumn;
 
 class ProductTable extends DataTableComponent
@@ -15,6 +17,13 @@ class ProductTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
+        $this->setDefaultSort('id', 'desc');
+
+        $this->setConfigurableAreas([
+            'after-wrapper' => [
+                'admin.products.modal',
+            ],
+        ]);
     }
 
     public function columns(): array
@@ -37,7 +46,9 @@ class ProductTable extends DataTableComponent
                 ->searchable()
                 ->sortable(),
             Column::make('Precio', 'price'),
-            Column::make('Stock', 'stock')->sortable(),
+            Column::make('Stock', 'stock')->sortable()->format(function ($value, $row) {
+                return view('admin.products.stock', ['stock' => $value, 'product' => $row]);
+            }),
             Column::make('Acciones')
                 ->label(function ($row) {
                     return view('admin.products.actions', ['product' => $row]);
@@ -48,5 +59,25 @@ class ProductTable extends DataTableComponent
     public function builder(): Builder
     {
         return Product::query()->with(['category', 'images']);
+    }
+
+    // Propiedades
+
+    public $openModal = false;
+
+    public $inventories = [];
+
+    // Métodos
+
+    public function showStock($productId)
+    {
+        $this->openModal = true;
+
+        $latestInventories = Inventory::select('warehouse_id', DB::raw('MAX(id) as id'))
+            ->where('product_id', $productId)
+            ->groupBy('warehouse_id')
+            ->pluck('id');
+
+        $this->inventories = Inventory::whereIn('id', $latestInventories)->with(['warehouse'])->get();
     }
 }
