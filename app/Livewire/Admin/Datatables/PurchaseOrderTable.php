@@ -6,6 +6,7 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\PurchaseOrder;
 use Illuminate\Database\Eloquent\Builder;
+use Rappasoft\LaravelLivewireTables\Views\Filters\DateRangeFilter;
 
 class PurchaseOrderTable extends DataTableComponent
 {
@@ -15,6 +16,19 @@ class PurchaseOrderTable extends DataTableComponent
     {
         $this->setPrimaryKey('id');
         $this->setDefaultSort('id', 'desc');
+    }
+
+    public function filters(): array
+    {
+        return [
+            DateRangeFilter::make('Fecha')
+                ->config([
+                    'placeholder' => 'Seleccione un rango de fechas',
+                ])
+                ->filter(function ($query, array $dateRange) {
+                    $query->whereBetween('date', [$dateRange['minDate'] . ' 00:00:00', $dateRange['maxDate'] . ' 23:59:59']);
+                }),
+        ];
     }
 
     public function columns(): array
