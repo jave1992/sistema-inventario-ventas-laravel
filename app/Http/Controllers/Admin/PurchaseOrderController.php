@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\PurchaseOrder;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PurchaseOrderController extends Controller
 {
@@ -14,5 +16,12 @@ class PurchaseOrderController extends Controller
     public function create()
     {
         return view('admin.purchase_orders.create');
+    }
+
+    public function pdf(PurchaseOrder $purchaseOrder)
+    {
+        $pdf = Pdf::loadView('admin.purchase_orders.pdf', compact('purchaseOrder'));
+
+        return $pdf->download("orden_compra_{$purchaseOrder->id}.pdf");
     }
 }

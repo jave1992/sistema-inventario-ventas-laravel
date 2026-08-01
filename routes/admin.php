@@ -29,7 +29,9 @@ Route::resource('warehouses', WarehouseController::class)->except(['show']);
 // Compras
 Route::resource('customers', CustomerController::class)->except(['show']);
 Route::resource('purchase-orders', PurchaseOrderController::class)->only(['index', 'create']);
+Route::get('purchase-orders/{purchaseOrder}/pdf', [PurchaseOrderController::class, 'pdf'])->name('purchase-orders.pdf');
 Route::resource('purchases', PurchaseController::class)->only(['index', 'create']);
+Route::get('purchases/{purchase}/pdf', [PurchaseController::class, 'pdf'])->name('purchases.pdf');
 
 // Ventas
 Route::resource('suppliers', SupplierController::class)->except(['show']);
