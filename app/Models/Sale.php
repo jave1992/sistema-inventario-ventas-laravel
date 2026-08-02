@@ -28,6 +28,12 @@ class Sale extends Model
         return $this->belongsTo(Customer::class);
     }
 
+    // Relación uno a muchos inversa
+    public function warehouse()
+    {
+        return $this->belongsTo(Warehouse::class);
+    }
+
     // Relación muchos a muchos polimórfica
     public function products()
     {

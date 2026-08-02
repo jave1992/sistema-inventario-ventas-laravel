@@ -36,7 +36,9 @@ Route::get('purchases/{purchase}/pdf', [PurchaseController::class, 'pdf'])->name
 // Ventas
 Route::resource('suppliers', SupplierController::class)->except(['show']);
 Route::resource('quotes', QuoteController::class)->only(['index', 'create']);
+Route::get('quotes/{quote}/pdf', [QuoteController::class, 'pdf'])->name('quotes.pdf');
 Route::resource('sales', SaleController::class)->only(['index', 'create']);
+Route::get('sales/{sale}/pdf', [SaleController::class, 'pdf'])->name('sales.pdf');
 
 // Movimientos
 Route::resource('movements', MovementController::class)->only(['index', 'create']);
