@@ -18,6 +18,12 @@ class PurchaseTable extends DataTableComponent
     {
         $this->setPrimaryKey('id');
         $this->setDefaultSort('id', 'desc');
+
+        $this->setConfigurableAreas([
+            'after-wrapper' => [
+                'admin.purchases.modal',
+            ],
+        ]);
     }
 
     public function filters(): array
@@ -75,5 +81,35 @@ class PurchaseTable extends DataTableComponent
     public function builder(): Builder
     {
         return Purchase::query()->with(['supplier']);
+    }
+
+    // Propiedades
+
+    public $form = [
+        'open' => false,
+        'document' => '',
+        'client' => '',
+        'email' => '',
+    ];
+
+    // Métodos
+
+    public function openModal(Purchase $purchase)
+    {
+        $this->form['open'] = true;
+        $this->form['document'] = 'Compra ' . $purchase->serie . ' - ' . $purchase->correlative;
+        $this->form['client'] = $purchase->supplier->document_number . ' - ' . $purchase->supplier->name;
+        $this->form['email'] = $purchase->supplier->email;
+    }
+
+    public function sendEmail()
+    {
+        $this->dispatch('swal', [
+            'title' => 'Correo enviado',
+            'text' => 'El correo ha sido enviado correctamente.',
+            'icon' => 'success',
+        ]);
+
+        $this->reset('form');
     }
 }
