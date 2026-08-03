@@ -2,11 +2,13 @@
 
 namespace App\Livewire\Admin\Datatables;
 
+use App\Mail\PdfSend;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Purchase;
 use App\Models\Supplier;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Mail;
 use Rappasoft\LaravelLivewireTables\Views\Filters\DateRangeFilter;
 use Rappasoft\LaravelLivewireTables\Views\Filters\MultiSelectFilter;
 
@@ -21,7 +23,7 @@ class PurchaseTable extends DataTableComponent
 
         $this->setConfigurableAreas([
             'after-wrapper' => [
-                'admin.purchases.modal',
+                'admin.pdf.modal',
             ],
         ]);
     }
@@ -90,6 +92,8 @@ class PurchaseTable extends DataTableComponent
         'document' => '',
         'client' => '',
         'email' => '',
+        'model' => null,
+        'view_pdf_patch' => 'admin.purchases.pdf',
     ];
 
     // Métodos
@@ -100,10 +104,17 @@ class PurchaseTable extends DataTableComponent
         $this->form['document'] = 'Compra ' . $purchase->serie . ' - ' . $purchase->correlative;
         $this->form['client'] = $purchase->supplier->document_number . ' - ' . $purchase->supplier->name;
         $this->form['email'] = $purchase->supplier->email;
+        $this->form['model'] = $purchase;
     }
 
     public function sendEmail()
     {
+        $this->validate([
+            'form.email' => 'required|email',
+        ]);
+
+        Mail::to($this->form['email'])->send(new PdfSend($this->form));
+
         $this->dispatch('swal', [
             'title' => 'Correo enviado',
             'text' => 'El correo ha sido enviado correctamente.',

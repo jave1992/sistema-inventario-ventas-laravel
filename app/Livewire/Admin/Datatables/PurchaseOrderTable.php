@@ -2,10 +2,12 @@
 
 namespace App\Livewire\Admin\Datatables;
 
+use App\Mail\PdfSend;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\PurchaseOrder;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Mail;
 use Rappasoft\LaravelLivewireTables\Views\Filters\DateRangeFilter;
 
 class PurchaseOrderTable extends DataTableComponent
@@ -16,6 +18,12 @@ class PurchaseOrderTable extends DataTableComponent
     {
         $this->setPrimaryKey('id');
         $this->setDefaultSort('id', 'desc');
+
+        $this->setConfigurableAreas([
+            'after-wrapper' => [
+                'admin.pdf.modal',
+            ],
+        ]);
     }
 
     public function filters(): array
@@ -63,5 +71,44 @@ class PurchaseOrderTable extends DataTableComponent
     public function builder(): Builder
     {
         return PurchaseOrder::query()->with(['supplier']);
+    }
+
+    // Propiedades
+
+    public $form = [
+        'open' => false,
+        'document' => '',
+        'client' => '',
+        'email' => '',
+        'model' => null,
+        'view_pdf_patch' => 'admin.purchase_orders.pdf',
+    ];
+
+    // Métodos
+
+    public function openModal(PurchaseOrder $purchaseOrder)
+    {
+        $this->form['open'] = true;
+        $this->form['document'] = 'Orden de Compra ' . $purchaseOrder->serie . ' - ' . $purchaseOrder->correlative;
+        $this->form['client'] = $purchaseOrder->supplier->document_number . ' - ' . $purchaseOrder->supplier->name;
+        $this->form['email'] = $purchaseOrder->supplier->email;
+        $this->form['model'] = $purchaseOrder;
+    }
+
+    public function sendEmail()
+    {
+        $this->validate([
+            'form.email' => 'required|email',
+        ]);
+
+        Mail::to($this->form['email'])->send(new PdfSend($this->form));
+
+        $this->dispatch('swal', [
+            'title' => 'Correo enviado',
+            'text' => 'El correo ha sido enviado correctamente.',
+            'icon' => 'success',
+        ]);
+
+        $this->reset('form');
     }
 }
