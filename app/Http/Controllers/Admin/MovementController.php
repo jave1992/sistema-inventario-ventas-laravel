@@ -20,7 +20,7 @@ class MovementController extends Controller
 
     public function pdf(Movement $movement)
     {
-        $pdf = Pdf::loadView('admin.movements.pdf', compact('movement'));
+        $pdf = Pdf::loadView('admin.movements.pdf', ['model' => $movement]);
 
         return $pdf->download("movimiento_{$movement->id}.pdf");
     }

@@ -90,8 +90,8 @@ class TransferTable extends DataTableComponent
     {
         $this->form['open'] = true;
         $this->form['document'] = 'Transferencia ' . $transfer->serie . ' - ' . $transfer->correlative;
-        $this->form['client'] = $transfer->originWarehouse->name . ' - ' . $transfer->destinationWarehouse->name;
-        $this->form['email'] = $transfer->originWarehouse->email;
+        $this->form['client'] = $transfer->originWarehouse->name;
+        $this->form['email'] = '';
         $this->form['model'] = $transfer;
     }
 

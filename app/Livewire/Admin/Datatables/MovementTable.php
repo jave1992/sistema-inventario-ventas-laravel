@@ -99,8 +99,8 @@ class MovementTable extends DataTableComponent
     {
         $this->form['open'] = true;
         $this->form['document'] = 'Movimiento ' . $movement->serie . ' - ' . $movement->correlative;
-        $this->form['client'] = $movement->warehouse->name . ' - ' . $movement->reason->name;
-        $this->form['email'] = $movement->warehouse->email;
+        $this->form['client'] = $movement->warehouse->name;
+        $this->form['email'] = '';
         $this->form['model'] = $movement;
     }
 
