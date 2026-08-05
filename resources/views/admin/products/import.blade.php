@@ -11,5 +11,5 @@
         'name' => 'Importación',
     ],
 ]">
-    @livewire('import-of-products')
+    @livewire('admin.import-of-products')
 </x-admin-layout>
