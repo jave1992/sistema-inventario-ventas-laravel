@@ -17,11 +17,11 @@ class ProductsTemplateExport implements FromArray, WithHeadings, WithStyles, Sho
     {
         return [
             [
-                'Producto de ejemplo',
-                'Descripción del producto de ejemplo',
-                'SKU de ejemplo',
-                'Precio de ejemplo',
-                'Categoría de ejemplo',
+                'Producto de ejemplo 1',
+                'Descripción del producto de ejemplo 1',
+                'SKU12345',
+                '10.99',
+                '1',
             ]
         ];
     }
@@ -29,11 +29,11 @@ class ProductsTemplateExport implements FromArray, WithHeadings, WithStyles, Sho
     public function headings(): array
     {
         return [
-            'Nombre del producto',
-            'Descripción',
-            'SKU',
-            'Precio',
-            'Categoría ID',
+            'name',
+            'description',
+            'sku',
+            'price',
+            'category_id',
         ];
     }
 
