@@ -14,6 +14,9 @@ class ImportOfProducts extends Component
 
     public $file;
 
+    public $errors = [];
+    public $importedCount = 0;
+
     public function render()
     {
         return view('livewire.admin.import-of-products');
@@ -30,6 +33,21 @@ class ImportOfProducts extends Component
             'file' => 'required|file|mimes:xlsx,xls',
         ]);
 
-        Excel::import(new ProductsImport, $this->file);
+        $productsImport = new ProductsImport();
+
+        Excel::import($productsImport, $this->file);
+
+        $this->errors = $productsImport->getErrors();
+        $this->importedCount = $productsImport->getImportedCount();
+
+        if (count($this->errors) == 0) {
+            session()->flash('swal', [
+                'icon' => 'success',
+                'title' => 'Importación exitosa',
+                'text' => "Se han importado {$this->importedCount} productos correctamente.",
+            ]);
+
+            return redirect()->route('admin.products.index');
+        }
     }
 }
