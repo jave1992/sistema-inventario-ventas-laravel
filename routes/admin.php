@@ -27,6 +27,7 @@ Route::post('products/{product}/dropzone', [ProductController::class, 'dropzone'
 Route::get('products/{product}/kardex', [ProductController::class, 'kardex'])->name('products.kardex');
 Route::get('products/import', [ProductController::class, 'import'])->name('products.import');
 Route::resource('warehouses', WarehouseController::class)->except(['show']);
+Route::get('warehouses/import', [WarehouseController::class, 'import'])->name('warehouses.import');
 
 // Compras
 Route::resource('customers', CustomerController::class)->except(['show']);
