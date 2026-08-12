@@ -21,6 +21,7 @@ Route::get('/', function () {
 // Inventario
 
 Route::resource('categories', CategoryController::class)->except(['show']);
+Route::get('categories/import', [CategoryController::class, 'import'])->name('categories.import');
 Route::resource('products', ProductController::class)->except(['show']);
 Route::post('products/{product}/dropzone', [ProductController::class, 'dropzone'])->name('products.dropzone');
 Route::get('products/{product}/kardex', [ProductController::class, 'kardex'])->name('products.kardex');
