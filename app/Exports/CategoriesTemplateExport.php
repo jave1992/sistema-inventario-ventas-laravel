@@ -10,6 +10,7 @@ use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class CategoriesTemplateExport implements FromArray, WithHeadings, WithStyles, ShouldAutoSize, WithEvents
 {
@@ -31,7 +32,7 @@ class CategoriesTemplateExport implements FromArray, WithHeadings, WithStyles, S
         ];
     }
 
-    public function styles($sheet)
+    public function styles(Worksheet $sheet)
     {
         return [
             1 => [
@@ -44,7 +45,7 @@ class CategoriesTemplateExport implements FromArray, WithHeadings, WithStyles, S
                     'horizontal' => 'center',
                 ],
             ],
-            'A1:B1' => [
+            'A1:B2' => [
                 'borders' => [
                     'allBorders' => [
                         'borderStyle' => Border::BORDER_THIN,

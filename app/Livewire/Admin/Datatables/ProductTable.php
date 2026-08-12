@@ -2,12 +2,14 @@
 
 namespace App\Livewire\Admin\Datatables;
 
+use App\Exports\ProductsExport;
 use App\Models\Inventory;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 use Rappasoft\LaravelLivewireTables\Views\Columns\ImageColumn;
 
 class ProductTable extends DataTableComponent
@@ -79,5 +81,21 @@ class ProductTable extends DataTableComponent
             ->pluck('id');
 
         $this->inventories = Inventory::whereIn('id', $latestInventories)->with(['warehouse'])->get();
+    }
+
+    public function bulkActions(): array
+    {
+        return [
+            'exportSelected' => 'Exportar',
+        ];
+    }
+
+    public function exportSelected()
+    {
+        $selected = $this->getSelected();
+
+        $products = count($selected) ? Product::whereIn('id', $selected)->get() : Product::all();
+        
+        return Excel::download(new ProductsExport($products), 'productos.xlsx');
     }
 }
