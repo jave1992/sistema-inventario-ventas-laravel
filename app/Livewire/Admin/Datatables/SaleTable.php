@@ -2,12 +2,14 @@
 
 namespace App\Livewire\Admin\Datatables;
 
+use App\Exports\SalesExport;
 use App\Mail\PdfSend;
 use App\Models\Sale;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Facades\Excel;
 use Rappasoft\LaravelLivewireTables\Views\Filters\DateRangeFilter;
 
 class SaleTable extends DataTableComponent
@@ -110,5 +112,21 @@ class SaleTable extends DataTableComponent
         ]);
 
         $this->reset('form');
+    }
+
+    public function bulkActions(): array
+    {
+        return [
+            'exportSelected' => 'Exportar',
+        ];
+    }
+
+    public function exportSelected()
+    {
+        $selected = $this->getSelected();
+
+        $sales = count($selected) ? Sale::whereIn('id', $selected)->with(['customer.identity'])->get() : Sale::with(['customer.identity'])->get();
+
+        return Excel::download(new SalesExport($sales), 'ventas.xlsx');
     }
 }
