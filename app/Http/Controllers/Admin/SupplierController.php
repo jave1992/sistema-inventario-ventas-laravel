@@ -116,4 +116,9 @@ class SupplierController extends Controller
 
         return redirect()->route('admin.suppliers.index');
     }
+
+    public function import()
+    {
+        return view('admin.suppliers.import');
+    }
 }

@@ -116,4 +116,9 @@ class CustomerController extends Controller
 
         return redirect()->route('admin.customers.index');
     }
+
+    public function import()
+    {
+        return view('admin.customers.import');
+    }
 }
