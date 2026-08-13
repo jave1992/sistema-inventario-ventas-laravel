@@ -7,7 +7,7 @@
             'name' => 'Dashboard',
             'icon' => 'fa-solid fa-gauge',
             'href' => route('admin.dashboard'),
-            'active' => request()->routeIs('admin.dashboard'),
+            'active' => request()->routeIs(['admin.dashboard']),
         ],
         [
             'name' => 'Inventario',
@@ -79,7 +79,7 @@
         [
             'name' => 'Movimientos',
             'icon' => 'fa-solid fa-exchange-alt',
-            'active' => [request()->routeIs('admin.movements.*'), request()->routeIs('admin.transfers.*')],
+            'active' => request()->routeIs(['admin.movements.*', 'admin.transfers.*']),
             'submenu' => [
                 [
                     'name' => 'Entradas y Salidas',

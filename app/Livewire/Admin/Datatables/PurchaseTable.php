@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Datatables;
 
+use App\Exports\PurchasesExport;
 use App\Mail\PdfSend;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -9,6 +10,7 @@ use App\Models\Purchase;
 use App\Models\Supplier;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Facades\Excel;
 use Rappasoft\LaravelLivewireTables\Views\Filters\DateRangeFilter;
 use Rappasoft\LaravelLivewireTables\Views\Filters\MultiSelectFilter;
 
@@ -122,5 +124,21 @@ class PurchaseTable extends DataTableComponent
         ]);
 
         $this->reset('form');
+    }
+
+     public function bulkActions(): array
+    {
+        return [
+            'exportSelected' => 'Exportar',
+        ];
+    }
+
+    public function exportSelected()
+    {
+        $selected = $this->getSelected();
+
+        $purchases = count($selected) ? Purchase::whereIn('id', $selected)->with(['supplier.identity'])->get() : Purchase::with(['supplier.identity'])->get();
+        
+        return Excel::download(new PurchasesExport($purchases), 'compras.xlsx');
     }
 }
