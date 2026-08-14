@@ -19,6 +19,7 @@ class Product extends Model
         'price',
         'category_id',
         'stock',
+        'min_stock',
     ];
 
     // Accesores

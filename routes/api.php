@@ -13,8 +13,8 @@ use Illuminate\Support\Facades\Route;
 Route::post('/warehouses', function (Request $request) {
     return Warehouse::select('id', 'name', 'location as description')
         ->when($request->search, function ($query, $search) {
-            $query->where('name', 'like', '%{$search}%')
-                ->orWhere('location', 'like', '%{$search%}');
+            $query->where('name', 'like', "%$search%")
+                ->orWhere('location', 'like', "%$search%");
         })
         ->when($request->exists('exclude'), function ($query) use ($request) {
             $query->where('id', '!=', $request->input('exclude'));
@@ -26,8 +26,8 @@ Route::post('/warehouses', function (Request $request) {
 Route::post('/suppliers', function (Request $request) {
     return Supplier::select('*')
         ->when($request->search, function ($query, $search) {
-            $query->where('name', 'like', '%{$search}%')
-                ->orWhere('document_number', 'like', '%{$search%}');
+            $query->where('name', 'like', "%$search%")
+                ->orWhere('document_number', 'like', "%$search%");
         })
         ->when($request->exists('selected'), fn($query) => $query->whereIn('id', $request->input('selected')), fn($query) => $query->limit(10))
         ->get();
@@ -36,8 +36,8 @@ Route::post('/suppliers', function (Request $request) {
 Route::post('/customers', function (Request $request) {
     return Customer::select('*')
         ->when($request->search, function ($query, $search) {
-            $query->where('name', 'like', '%{$search}%')
-                ->orWhere('document_number', 'like', '%{$search%}');
+            $query->where('name', 'like', "%$search%")
+                ->orWhere('document_number', 'like', "%$search%");
         })
         ->when($request->exists('selected'), fn($query) => $query->whereIn('id', $request->input('selected')), fn($query) => $query->limit(10))
         ->get();
@@ -46,8 +46,8 @@ Route::post('/customers', function (Request $request) {
 Route::post('/products', function (Request $request) {
     return Product::select('*')
         ->when($request->search, function ($query, $search) {
-            $query->where('name', 'like', '%{$search}%')
-                ->orWhere('sku', 'like', '%{$search%}');
+            $query->where('name', 'like', "%$search%")
+                ->orWhere('sku', 'like', "%$search%");
         })
         ->when($request->exists('selected'), fn($query) => $query->whereIn('id', $request->input('selected')), fn($query) => $query->limit(10))
         ->get();
@@ -136,7 +136,7 @@ Route::post('/quotes', function (Request $request) {
 Route::post('/reasons', function (Request $request) {
     return Reason::select('id', 'name')
         ->when($request->search, function ($query, $search) {
-            $query->where('name', 'like', '%{$search}%');
+            $query->where('name', 'like', "%$search%");
         })
         ->when($request->exists('selected'), fn($query) => $query->whereIn('id', $request->input('selected')), fn($query) => $query->limit(10))
         ->where('type', $request->input('type', ''))

@@ -37,7 +37,8 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric',
-            'category_id' => 'required|exists:categories,id'
+            'category_id' => 'required|exists:categories,id',
+            'min_stock' => 'required|integer|min:0'
         ]);
 
         $product = Product::create($data);
@@ -70,7 +71,8 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric',
-            'category_id' => 'required|exists:categories,id'
+            'category_id' => 'required|exists:categories,id',
+            'min_stock' => 'required|integer|min:0'
         ]);
 
         $product = Product::create($data);
@@ -81,7 +83,7 @@ class ProductController extends Controller
             'text' => 'El producto se ha actualizado correctamente'
         ]);
 
-        return view('admin.products.edit', compact('product'));
+        return redirect()->route('admin.products.edit', $product);
     }
 
     /**

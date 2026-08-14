@@ -7,5 +7,5 @@
         'name' => 'Productos con bajo stock',
     ],
 ]">
-
+    @livewire('admin.datatables.low-stock-table')
 </x-admin-layout>
