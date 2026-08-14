@@ -7,5 +7,5 @@
         'name' => 'Productos más vendidos',
     ],
 ]">
-
+    @livewire('admin.datatables.top-products-table')
 </x-admin-layout>
