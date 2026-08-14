@@ -7,5 +7,5 @@
         'name' => 'Clientes más frecuentes',
     ],
 ]">
-
+    @livewire('admin.datatables.top-customers-table')
 </x-admin-layout>
