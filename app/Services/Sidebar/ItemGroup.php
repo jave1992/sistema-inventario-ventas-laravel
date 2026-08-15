@@ -16,7 +16,7 @@ class ItemGroup implements ItemInterface
         $this->active = $active;
     }
 
-    public function add(ItemHeader $item): self
+    public function add(ItemInterface $item): self
     {
         $this->items[] = $item;
 
@@ -27,9 +27,9 @@ class ItemGroup implements ItemInterface
     {
         $active = $this->active ? 'true' : 'false';
 
-        $itemsHTML = collect($this->items)->map(function (ItemHeader $item) {
+        $itemsHTML = collect($this->items)->map(function (ItemInterface $item) {
             return '<li class="pl-4">' . $item->render() . '</li>';
-        })->implode('\n');
+        })->implode("\n");
 
         return <<<HTML
             <div x-data="{ open: {$active} }">
