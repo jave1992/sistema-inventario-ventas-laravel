@@ -1,6 +1,6 @@
 @props([
-    'title' => config('app.name', 'Laravel'),
-    'breadcrumbs' => [],
+'title' => config('app.name', 'Laravel'),
+'breadcrumbs' => [],
 ])
 
 <!DOCTYPE html>
@@ -30,7 +30,7 @@
 
     <!-- Styles -->
     @livewireStyles
-    
+
     @stack('css')
 </head>
 
@@ -45,9 +45,9 @@
             @include('layouts.includes.admin.breadcrumb')
 
             @isset($action)
-                <div class="ml-auto">
-                    {{ $action }}
-                </div>
+            <div class="ml-auto">
+                {{ $action }}
+            </div>
             @endisset
         </div>
         {{ $slot }}
@@ -66,10 +66,35 @@
     </script>
 
     @if (session('swal'))
-        <script>
-            Swal.fire(@json(session('swal')));
-        </script>
+    <script>
+        Swal.fire(@json(session('swal')));
+    </script>
     @endif
+
+    <script>
+        forms = document.querySelectorAll('.delete-form');
+
+        forms.forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                Swal.fire({
+                    title: "¿Estás seguro?",
+                    text: "¡No podras revertir esta acción!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "¡Sí, eliminar!",
+                    cancelButtonText: "Cancelar"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+    </script>
 
     @stack('js')
 </body>
