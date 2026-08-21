@@ -29,7 +29,23 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $data['password'] = bcrypt($data['password']);
+
+        $user = User::create($data);
+
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => 'Usuario creado correctamente',
+            'text' => 'El usuario ha sido creado exitosamente.',
+        ]);
+
+        return redirect()->route('admin.users.edit', $user);
     }
 
     /**
