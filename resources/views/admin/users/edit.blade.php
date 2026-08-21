@@ -11,5 +11,20 @@
         'name' => 'Editar',
     ],
 ]">
-
+    <x-wire-card>
+        <h1 class="text-2xl font-semibold mb-4">Editar Usuario</h1>
+        <form action="{{ route('admin.users.update', $user) }}" method="POST">
+            @csrf
+            @method('PUT')
+            <div class="grid grid-cols-2 gap-4">
+                <x-wire-input label="Nombre" name="name" placeholder="Nombre del usuario" value="{{ old('name', $user->name) }}" required />
+                <x-wire-input type="email" label="Correo Electrónico" name="email" placeholder="Correo electrónico del usuario" value="{{ old('email', $user->email) }}" required />
+                <x-wire-input type="password" label="Contraseña" name="password" placeholder="Contraseña del usuario" />
+                <x-wire-input type="password" label="Confirmar Contraseña" name="password_confirmation" placeholder="Confirma la contraseña del usuario" />
+            </div>
+            <div class="flex justify-end mt-4">
+                <x-wire-button type="submit" blue>Actualizar Usuario</x-wire-button>
+            </div>
+        </form>
+    </x-wire-card>
 </x-admin-layout>
