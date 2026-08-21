@@ -146,6 +146,8 @@ return [
         'type' => 'link',
         'title' => 'Usuarios',
         'icon' => 'fa-solid fa-users-cog',
+        'route' => 'admin.users.index',
+        'active' => 'admin.users.*',
     ],
     [
         'type' => 'link',
