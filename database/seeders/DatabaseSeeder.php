@@ -20,17 +20,12 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Jair Vasquez',
-            'email' => 'jair1624@gmail.com',
-            'password' => bcrypt('12345678')
-        ]);
-
         $this->call([
             IdentitySeeder::class,
             CategorySeeder::class,
             WarehouseSeeder::class,
-            ReasonSeeeder::class
+            ReasonSeeeder::class,
+            RoleSeeder::class
         ]);
 
         Customer::factory(50)->create();
