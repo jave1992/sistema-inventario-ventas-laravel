@@ -143,7 +143,7 @@ class RoleSeeder extends Seeder
             'delete-customers',
         ]);
 
-        Role::create(['name' => 'viewer'])->givePermissionTo([
+        Role::create(['name' => 'visitante'])->givePermissionTo([
             // Categorias
             'read-categories',
 

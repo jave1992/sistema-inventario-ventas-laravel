@@ -153,6 +153,8 @@ return [
         'type' => 'link',
         'title' => 'Roles',
         'icon' => 'fa-solid fa-user-shield',
+        'route' => 'admin.roles.index',
+        'active' => 'admin.roles.*',
     ],
     [
         'type' => 'link',
