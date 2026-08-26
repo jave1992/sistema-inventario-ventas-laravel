@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\Identity;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class CustomerController extends Controller
 {
@@ -14,6 +15,8 @@ class CustomerController extends Controller
      */
     public function index()
     {
+        Gate::authorize('read-customers');
+        
         return view('admin.customers.index');
     }
 
@@ -22,6 +25,8 @@ class CustomerController extends Controller
      */
     public function create()
     {
+        Gate::authorize('create-customers');
+
         $identities = Identity::all();
         
         return view('admin.customers.create', compact('identities'));
@@ -32,6 +37,8 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
+        Gate::authorize('create-customers');
+
         $data = $request->validate(
             [
                 'identity_id' => 'required|exists:identities,id',
@@ -59,6 +66,8 @@ class CustomerController extends Controller
      */
     public function edit(Customer $customer)
     {
+        Gate::authorize('update-customers');
+
         $identities = Identity::all();
 
         return view('admin.customers.edit', compact('customer', 'identities'));
@@ -69,6 +78,8 @@ class CustomerController extends Controller
      */
     public function update(Request $request, Customer $customer)
     {
+        Gate::authorize('update-customers');
+
         $data = $request->validate(
             [
                 'identity_id' => 'required|exists:identities,id',
@@ -96,6 +107,8 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer)
     {
+        Gate::authorize('delete-customers');
+
         if ($customer->quotes()->exists() || $customer->sales()->exists()) {
             session()->flash('swal', [
                 'icon' => 'error',
@@ -119,6 +132,8 @@ class CustomerController extends Controller
 
     public function import()
     {
+        Gate::authorize('create-customers');
+
         return view('admin.customers.import');
     }
 }

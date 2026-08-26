@@ -158,11 +158,6 @@ return [
     ],
     [
         'type' => 'link',
-        'title' => 'Permisos',
-        'icon' => 'fa-solid fa-key',
-    ],
-    [
-        'type' => 'link',
         'title' => 'Ajustes',
         'icon' => 'fa-solid fa-cogs',
     ],

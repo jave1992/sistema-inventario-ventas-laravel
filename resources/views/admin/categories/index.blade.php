@@ -7,7 +7,7 @@
         'name' => 'Categorías',
     ],
 ]">
-
+    @can('create-categories')
     <x-slot name="action">
         <x-wire-button href="{{ route('admin.categories.import') }}" green>
             <i class="fas fa-file-import"></i>
@@ -18,6 +18,7 @@
             Nuevo
         </x-wire-button>
     </x-slot>
+    @endcan
 
     @livewire('admin.datatables.category-table')
 </x-admin-layout>

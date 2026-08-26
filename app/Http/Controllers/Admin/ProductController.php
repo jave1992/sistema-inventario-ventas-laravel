@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
@@ -15,6 +16,8 @@ class ProductController extends Controller
      */
     public function index()
     {
+        Gate::authorize('read-products');
+        
         return view('admin.products.index');
     }
 
@@ -23,6 +26,8 @@ class ProductController extends Controller
      */
     public function create()
     {
+        Gate::authorize('create-products');
+
         $categories = Category::all();
 
         return view('admin.products.create', compact('categories'));
@@ -33,6 +38,8 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        Gate::authorize('create-products');
+
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -57,6 +64,8 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
+        Gate::authorize('update-products');
+
         $categories = Category::all();
 
         return view('admin.products.edit', compact('product', 'categories'));
@@ -67,6 +76,8 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
+        Gate::authorize('update-products');
+
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -91,6 +102,8 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        Gate::authorize('delete-products');
+
         if ($product->inventories()->exists()) {
             session()->flash('swal', [
                 'icon' => 'error',
@@ -124,6 +137,8 @@ class ProductController extends Controller
 
     public function dropzone(Request $request, Product $product)
     {
+        Gate::authorize('update-products');
+
         $image = $product->images()->create([
             'path' => Storage::put('/images', $request->file('file')),
             'size' => $request->file('file')->getSize()
@@ -137,11 +152,15 @@ class ProductController extends Controller
 
     public function kardex(Product $product)
     {
+        Gate::authorize('read-products');
+
         return view('admin.products.kardex', compact('product'));
     }
 
     public function import()
     {
+        Gate::authorize('create-products');
+
         return view('admin.products.import');
     }
 }

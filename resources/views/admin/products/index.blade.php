@@ -23,6 +23,7 @@
         </style>
     @endpush
 
+    @can('create-products')
     <x-slot name="action">
         <x-wire-button href="{{ route('admin.products.import') }}" green>
             <i class="fas fa-file-import"></i>
@@ -33,6 +34,7 @@
             Nuevo
         </x-wire-button>
     </x-slot>
+    @endcan
 
     @livewire('admin.datatables.product-table')
 </x-admin-layout>

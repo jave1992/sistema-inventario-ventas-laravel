@@ -7,7 +7,7 @@
         'name' => 'Almacenes',
     ],
 ]">
-
+    @can('create-warehouses')
     <x-slot name="action">
         <x-wire-button href="{{ route('admin.warehouses.import') }}" green>
             <i class="fas fa-file-import"></i>
@@ -18,6 +18,7 @@
             Nuevo
         </x-wire-button>
     </x-slot>
+    @endcan
 
     @livewire('admin.datatables.warehouse-table')
 </x-admin-layout>

@@ -16,6 +16,7 @@
         </style>
     @endpush
 
+    @can('create-suppliers')
     <x-slot name="action">
         <x-wire-button href="{{ route('admin.suppliers.import') }}" green>
             <i class="fas fa-file-import"></i>
@@ -26,6 +27,7 @@
             Nuevo
         </x-wire-button>
     </x-slot>
+    @endcan
 
     @livewire('admin.datatables.supplier-table')
 </x-admin-layout>

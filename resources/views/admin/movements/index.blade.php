@@ -7,13 +7,13 @@
         'name' => 'Entradas y Salidas',
     ],
 ]">
-
+    @can('create-movements')
     <x-slot name="action">
         <x-wire-button href="{{ route('admin.movements.create') }}" blue>
             Nuevo
         </x-wire-button>
     </x-slot>
+    @endcan
 
     @livewire('admin.datatables.movement-table')
-
 </x-admin-layout>

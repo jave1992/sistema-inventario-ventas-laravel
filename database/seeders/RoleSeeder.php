@@ -85,20 +85,19 @@ class RoleSeeder extends Seeder
             // Reportes
             'read-top-products',
             'read-top-customers',
-            'read-top-suppliers',
             'read-low-stock',
+
+            // Usuarios
+            'create-users',
+            'read-users',
+            'update-users',
+            'delete-users',
 
             // Roles
             'create-roles',
             'read-roles',
             'update-roles',
             'delete-roles',
-
-            // Permisos
-            'create-permissions',
-            'read-permissions',
-            'update-permissions',
-            'delete-permissions',
 
             // Ajustes
             'read-settings',
@@ -186,11 +185,11 @@ class RoleSeeder extends Seeder
             'read-top-suppliers',
             'read-low-stock',
 
+            // Usuarios
+            'read-users',
+
             // Roles
             'read-roles',
-
-            // Permisos
-            'read-permissions',
 
             // Ajustes
             'read-settings',

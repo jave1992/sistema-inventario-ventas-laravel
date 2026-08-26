@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Identity;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class SupplierController extends Controller
 {
@@ -14,6 +15,8 @@ class SupplierController extends Controller
      */
     public function index()
     {
+        Gate::authorize('read-suppliers');
+
         return view('admin.suppliers.index');
     }
 
@@ -22,6 +25,8 @@ class SupplierController extends Controller
      */
     public function create()
     {
+        Gate::authorize('create-suppliers');
+        
         $identities = Identity::all();
         
         return view('admin.suppliers.create', compact('identities'));
@@ -32,6 +37,8 @@ class SupplierController extends Controller
      */
     public function store(Request $request)
     {
+        Gate::authorize('create-suppliers');
+
         $data = $request->validate(
             [
                 'identity_id' => 'required|exists:identities,id',
@@ -59,6 +66,8 @@ class SupplierController extends Controller
      */
     public function edit(Supplier $supplier)
     {
+        Gate::authorize('update-suppliers');
+
         $identities = Identity::all();
 
         return view('admin.suppliers.edit', compact('supplier', 'identities'));
@@ -69,6 +78,8 @@ class SupplierController extends Controller
      */
     public function update(Request $request, Supplier $supplier)
     {
+        Gate::authorize('update-suppliers');
+        
         $data = $request->validate(
             [
                 'identity_id' => 'required|exists:identities,id',
@@ -96,6 +107,8 @@ class SupplierController extends Controller
      */
     public function destroy(Supplier $supplier)
     {
+        Gate::authorize('delete-suppliers');
+
         if ($supplier->purchaseOrders()->exists() || $supplier->purchases()->exists()) {
             session()->flash('swal', [
                 'icon' => 'error',
@@ -119,6 +132,8 @@ class SupplierController extends Controller
 
     public function import()
     {
+        Gate::authorize('create-suppliers');
+
         return view('admin.suppliers.import');
     }
 }
