@@ -2,6 +2,8 @@
 
 namespace App\Services\Sidebar;
 
+use Illuminate\Support\Facades\Gate;
+
 class ItemLink implements ItemInterface
 {
     private string $title;
@@ -22,7 +24,7 @@ class ItemLink implements ItemInterface
     public function render(): string
     {
         $activeClass = $this->active ? 'bg-gray-100' : '';
-        
+
         return <<<HTML
             <a href="{$this->url}"
                 class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group {$activeClass}">
@@ -36,6 +38,6 @@ class ItemLink implements ItemInterface
 
     public function authorize(): bool
     {
-        return true;
+        return count($this->can) > 0 ? Gate::any($this->can) : true;
     }
 }

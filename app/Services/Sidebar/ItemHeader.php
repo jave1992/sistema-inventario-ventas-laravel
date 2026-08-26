@@ -2,6 +2,8 @@
 
 namespace App\Services\Sidebar;
 
+use Illuminate\Support\Facades\Gate;
+
 class ItemHeader
 {
     private string $title;
@@ -24,6 +26,6 @@ class ItemHeader
 
     public function authorize(): bool
     {
-        return true;
+        return count($this->can) > 0 ? Gate::any($this->can) : true;
     }
 }

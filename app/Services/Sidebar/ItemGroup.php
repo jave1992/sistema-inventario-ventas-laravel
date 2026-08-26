@@ -18,6 +18,10 @@ class ItemGroup implements ItemInterface
 
     public function add(ItemInterface $item): self
     {
+        if (!$item->authorize()) {
+            return $this;
+        }
+
         $this->items[] = $item;
 
         return $this;
@@ -25,6 +29,14 @@ class ItemGroup implements ItemInterface
 
     public function render(): string
     {
+        $this->items = array_filter($this->items, function ($item) {
+            return $item->authorize();
+        });
+
+        if (count($this->items) == 0) {
+            return '';
+        }
+
         $active = $this->active ? 'true' : 'false';
 
         $itemsHTML = collect($this->items)->map(function (ItemInterface $item) {
@@ -52,6 +64,12 @@ class ItemGroup implements ItemInterface
 
     public function authorize(): bool
     {
-        return true;
+        foreach ($this->items as $item) {
+            if ($item->authorize()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
