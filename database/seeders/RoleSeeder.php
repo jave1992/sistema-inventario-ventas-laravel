@@ -102,6 +102,12 @@ class RoleSeeder extends Seeder
             'read-settings',
             'update-settings',
 
+            // Compañías
+            'create-companies',
+            'read-companies',
+            'update-companies',
+            'delete-companies',
+
             // Facturas
             'read-invoice',
             'send-invoice',
@@ -203,6 +209,9 @@ class RoleSeeder extends Seeder
 
             // Ajustes
             'read-settings',
+
+            // Compañías
+            'read-companies',
 
             // Facturas
             'read-invoice',

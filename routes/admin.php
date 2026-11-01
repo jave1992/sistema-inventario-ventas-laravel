@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\ImageController;
 use App\Http\Controllers\Admin\InvoiceController;
@@ -68,6 +69,9 @@ Route::resource('users', UserController::class);
 
 // Roles
 Route::resource('roles', RoleController::class);
+
+// Compañías
+Route::resource('companies', CompanyController::class)->except(['show']);
 
 // Sunat
 

@@ -256,6 +256,19 @@ return [
     ],
     [
         'type' => 'link',
+        'title' => 'Compañías',
+        'icon' => 'fa-solid fa-building',
+        'route' => 'admin.companies.index',
+        'active' => 'admin.companies.*',
+        'can' => [
+            'create-companies',
+            'read-companies',
+            'update-companies',
+            'delete-companies',
+        ]
+    ],
+    [
+        'type' => 'link',
         'title' => 'Usuarios',
         'icon' => 'fa-solid fa-users-cog',
         'route' => 'admin.users.index',
