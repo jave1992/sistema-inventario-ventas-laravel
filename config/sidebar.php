@@ -214,6 +214,38 @@ return [
         ],
     ],
     [
+        'type' => 'group',
+        'title' => 'Sunat',
+        'icon' => 'fa-solid fa-exchange-alt',
+        'active' => ['admin.sunat.invoice.*', 'admin.sunat.note.*'],
+        'items' => [
+            [
+                'type' => 'link',
+                'title' => 'Facturas',
+                'route' => 'admin.sunat.invoice',
+                'active' => 'admin.sunat.invoice',
+                'can' => [
+                    'read-invoice',
+                    'send-invoice',
+                    'xml-invoice',
+                    'pdf-invoice',
+                ]
+            ],
+            [
+                'type' => 'link',
+                'title' => 'Notas de crédito',
+                'route' => 'admin.sunat.note',
+                'active' => 'admin.sunat.note',
+                'can' => [
+                    'read-note',
+                    'send-note',
+                    'xml-note',
+                    'pdf-note',
+                ]
+            ],
+        ],
+    ],
+    [
         'type' => 'header',
         'title' => 'Configuración',
         'can' => [

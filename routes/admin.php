@@ -3,7 +3,9 @@
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\ImageController;
+use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Admin\MovementController;
+use App\Http\Controllers\Admin\NoteController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\PurchaseController;
 use App\Http\Controllers\Admin\PurchaseOrderController;
@@ -66,3 +68,17 @@ Route::resource('users', UserController::class);
 
 // Roles
 Route::resource('roles', RoleController::class);
+
+// Sunat
+
+// Invoices
+Route::get('sunat/invoice', [InvoiceController::class, 'index'])->name('sunat.invoice');
+Route::get('sunat/invoice/send', [InvoiceController::class, 'send'])->name('sunat.invoice.send');
+Route::get('sunat/invoice/xml', [InvoiceController::class, 'xml'])->name('sunat.invoice.xml');
+Route::get('sunat/invoice/pdf', [InvoiceController::class, 'pdf'])->name('sunat.invoice.pdf');
+
+// Notes
+Route::get('sunat/note', [NoteController::class, 'index'])->name('sunat.note');
+Route::get('sunat/note/send', [NoteController::class, 'send'])->name('sunat.note.send');
+Route::get('sunat/note/xml', [NoteController::class, 'xml'])->name('sunat.note.xml');
+Route::get('sunat/note/pdf', [NoteController::class, 'pdf'])->name('sunat.note.pdf');

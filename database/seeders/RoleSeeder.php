@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -102,6 +101,18 @@ class RoleSeeder extends Seeder
             // Ajustes
             'read-settings',
             'update-settings',
+
+            // Facturas
+            'read-invoice',
+            'send-invoice',
+            'xml-invoice',
+            'pdf-invoice',
+
+            // Notas de crédito
+            'read-note',
+            'send-note',
+            'xml-note',
+            'pdf-note',
         ];
 
         foreach ($permissions as $permission) {
@@ -182,7 +193,6 @@ class RoleSeeder extends Seeder
             // Reportes
             'read-top-products',
             'read-top-customers',
-            'read-top-suppliers',
             'read-low-stock',
 
             // Usuarios
@@ -193,6 +203,12 @@ class RoleSeeder extends Seeder
 
             // Ajustes
             'read-settings',
+
+            // Facturas
+            'read-invoice',
+
+            // Notas de crédito
+            'read-note',
         ]);
 
         User::factory()->create([
