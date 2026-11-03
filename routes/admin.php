@@ -72,6 +72,9 @@ Route::resource('roles', RoleController::class);
 
 // Compañías
 Route::resource('companies', CompanyController::class)->except(['show']);
+Route::get('companies/import', [CompanyController::class, 'import'])->name('companies.import');
+Route::post('companies/{company}/logo', [CompanyController::class, 'logo'])->name('companies.logo');
+Route::post('companies/{company}/cert', [CompanyController::class, 'cert'])->name('companies.cert');
 
 // Sunat
 

@@ -7,22 +7,25 @@ use App\Models\Company;
 use App\Rules\UniqueRucRule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 class CompanyController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $companies = Company::where('user_id', Auth::id())->get();
 
-        return response()->json($companies, 200);
+        return view('admin.companies.index', compact('companies'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    public function create()
+    {
+        Gate::authorize('create-companies');
+
+        return view('admin.companies.create');
+    }
+
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -34,40 +37,33 @@ class CompanyController extends Controller
                 new UniqueRucRule(),
             ],
             'direccion' => 'required|string',
-            'logo' => 'nullable|image',
             'sol_user' => 'required|string',
             'sol_pass' => 'required|string',
-            'cert' => 'required|file|mimes:pem,txt',
             'client_id' => 'nullable|string',
             'client_secret' => 'nullable|string',
             'production' => 'nullable|boolean',
         ]);
 
-        if ($request->hasFile('logo')) {
-            $data['logo_path'] = $request->file('logo')->store('logos');
-        }
-
-        $data['cert_path'] = $request->file('cert')->store('certs');
         $data['user_id'] = Auth::id();
 
         $company = Company::create($data);
+        
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => '¡Bien hecho!',
+            'text' => 'La compañía se ha creado correctamente'
+        ]);
 
-        return response()->json(['message' => 'Compañía creada exitosamente', 'company' => $company], 201);
+        return view('admin.companies.edit', compact('company'));
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show($company)
+    public function edit(Company $company)
     {
-        $company = Company::where('ruc', $company)->where('user_id', Auth::id())->firstOrFail();
+        Gate::authorize('update-companies');
 
-        return response()->json($company, 200);
+        return view('admin.companies.edit', compact('company'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, $company)
     {
         $company = Company::where('ruc', $company)->where('user_id', Auth::id())->firstOrFail();
@@ -103,9 +99,6 @@ class CompanyController extends Controller
         return response()->json(['message' => 'Compañía actualizada exitosamente', 'company' => $company], 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($company)
     {
         $company = Company::where('ruc', $company)->where('user_id', Auth::id())->firstOrFail();
@@ -113,5 +106,35 @@ class CompanyController extends Controller
         $company->delete();
 
         return response()->json(['message' => 'Compañía eliminada exitosamente'], 200);
+    }
+
+    public function logo(Request $request, Company $company)
+    {
+        Gate::authorize('update-companies');
+
+        $image = $company->images()->create([
+            'path' => Storage::put('/logos', $request->file('file')),
+            'size' => $request->file('file')->getSize()
+        ]);
+
+        return response()->json([
+            'id' => $image->id,
+            'path' => $image->path
+        ]);
+    }
+
+    public function cert(Request $request, Company $company)
+    {
+        Gate::authorize('update-companies');
+
+        $cert = $company->certs()->create([
+            'path' => Storage::put('/certs', $request->file('file')),
+            'size' => $request->file('file')->getSize()
+        ]);
+
+        return response()->json([
+            'id' => $cert->id,
+            'path' => $cert->path
+        ]);
     }
 }

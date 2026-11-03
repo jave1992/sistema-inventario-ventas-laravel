@@ -17,12 +17,10 @@ return new class extends Migration
             $table->string('razon_social');
             $table->string('ruc');
             $table->string('direccion');
-            $table->string('logo_path')->nullable();
 
             // Credenciales
             $table->string('sol_user');
             $table->string('sol_pass');
-            $table->string('cert_path');
 
             // Credenciales API
             $table->string('client_id')->nullable();

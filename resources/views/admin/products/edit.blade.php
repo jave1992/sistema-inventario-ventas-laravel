@@ -13,7 +13,7 @@
 ]">
 
     @push('css')
-        <link rel="stylesheet" href="{{ asset('build/assets/css/dropzone.min.css') }}" type="text/css" />
+        <link rel="stylesheet" href="{{ url('https://cdn.jsdelivr.net/npm/dropzone@5/dist/min/dropzone.min.css') }}" type="text/css" />
     @endpush
 
     <div class="mb-4">
@@ -54,7 +54,7 @@
     </x-wire-card>
 
     @push('js')
-        <script src="{{ asset('build/assets/js/dropzone.min.js') }}"></script>
+        <script src="{{ url('https://cdn.jsdelivr.net/npm/dropzone@5/dist/min/dropzone.min.js') }}"></script>
 
         <script>
             // Note that the name "myDropzone" is the camelized

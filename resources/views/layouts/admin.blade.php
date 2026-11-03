@@ -14,13 +14,13 @@
     <title>{{ $title }}</title>
 
     <!-- Fonts -->
-    <link href="{{ asset('build/assets/css/fonts-bunny-net.css') }}" rel="stylesheet" />
+    <link href="{{ url('https://fonts.bunny.net/css?family=roboto:400,700') }}" rel="stylesheet" />
 
     <!-- FontAwesome -->
-    <script src="{{ asset('build/assets/js/9fe0564c68.js') }}" crossorigin="anonymous"></script>
+    <script src="{{ url('https://kit.fontawesome.com/9fe0564c68.js') }}" crossorigin="anonymous"></script>
 
     <!-- SweetAlert 2 -->
-    <script src="{{ asset('build/assets/js/sweetalert2@11.js') }}"></script>
+    <script src="{{ url('https://cdn.jsdelivr.net/npm/sweetalert2@11') }}"></script>
 
     <!-- wireui -->
     <wireui:scripts />
@@ -57,7 +57,7 @@
 
     @livewireScripts
 
-    <script src="{{ asset('build/assets/js/flowbite.min.js') }}"></script>
+    <script src="{{ url('https://cdn.jsdelivr.net/npm/flowbite@1.6.3/dist/flowbite.min.js') }}"></script>
 
     <script>
         Livewire.on('swal', (data) => {
