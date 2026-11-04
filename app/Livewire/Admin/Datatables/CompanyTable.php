@@ -26,8 +26,15 @@ class CompanyTable extends DataTableComponent
                 ->sortable(),
             Column::make("Direccion", "direccion")
                 ->sortable(),
-            Column::make("Producción", "production")
-                ->sortable(),
+           Column::make("Producción", "production")
+                ->sortable()
+                ->format(function ($value) {
+                    return match ($value) {
+                        0 => 'Inactivo',
+                        1 => 'Activo',
+                        default => 'Desconocido',
+                    };
+                }),
             Column::make('Acciones')
                 ->label(function ($row) {
                     return view('admin.companies.actions', ['company' => $row]);

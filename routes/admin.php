@@ -75,6 +75,8 @@ Route::resource('companies', CompanyController::class)->except(['show']);
 Route::get('companies/import', [CompanyController::class, 'import'])->name('companies.import');
 Route::post('companies/{company}/logo', [CompanyController::class, 'logo'])->name('companies.logo');
 Route::post('companies/{company}/cert', [CompanyController::class, 'cert'])->name('companies.cert');
+Route::delete('companies/logo/{company}/{logo}', [CompanyController::class, 'destroyLogo'])->name('companies.logo.destroy');
+Route::delete('companies/cert/{company}/{cert}', [CompanyController::class, 'destroyCert'])->name('companies.cert.destroy');
 
 // Sunat
 

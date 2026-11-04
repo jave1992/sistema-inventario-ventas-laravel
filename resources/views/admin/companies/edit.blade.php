@@ -40,13 +40,13 @@
             <x-wire-input label="RUC" name="ruc" placeholder="Número de RUC" value="{{ old('ruc', $company->ruc) }}" />
 
             <x-wire-input label="Dirección" name="direccion" placeholder="Dirección de la compañía" value="{{ old('direccion', $company->direccion) }}" />
-            
+
             <x-wire-input label="Usuario SOL" name="sol_user" placeholder="Usuario SOL" value="{{ old('sol_user', $company->sol_user) }}" />
-            
+
             <x-wire-input type="password" label="Contraseña SOL" name="sol_pass" placeholder="Contraseña SOL" value="{{ old('sol_pass', $company->sol_pass) }}" />
-            
+
             <x-wire-input label="Credencial ID" name="client_id" placeholder="Credencial ID" value="{{ old('client_id', $company->client_id) }}" />
-            
+
             <x-wire-input label="Credencial Secret" name="client_secret" placeholder="Credencial Secret" value="{{ old('client_secret', $company->client_secret) }}" />
 
             <x-wire-native-select label="Produccion" name="production">
@@ -56,7 +56,7 @@
 
             <div class="flex justify-end">
                 <x-button>
-                    Guardar
+                    Actualizar
                 </x-button>
             </div>
         </form>
@@ -66,11 +66,9 @@
     <script src="{{ url('https://cdn.jsdelivr.net/npm/dropzone@5/dist/min/dropzone.min.js') }}"></script>
 
     <script>
-        // Note that the name "myLogoDropzone" is the camelized
-        // id of the form.
         Dropzone.options.myLogoDropzone = {
-            // Configuration options go here
             addRemoveLinks: true,
+            acceptedFiles: ".jpeg,.jpg,.png",
             init: function() {
                 let myDropzone = this;
                 let images = @json($company->images);
@@ -92,7 +90,7 @@
                 });
 
                 this.on('removedfile', function(file) {
-                    axios.delete(`{{ config('app.url') }}/admin/logos/${file.id}`)
+                    axios.delete(`{{ env('APP_URL') }}/admin/companies/logo/{{ $company->id }}/${file.id}`)
                         .then(response => {
                             console.log(response.data);
                         })
@@ -104,8 +102,29 @@
         };
 
         Dropzone.options.myCertDropzone = {
-            // Configuration options go here
             addRemoveLinks: true,
+            acceptedFiles: ".txt,.pem",
+            previewTemplate: `
+                <div class="dz-preview dz-file-preview">
+                    <div class="dz-image">
+                        <div class="file-icon">File</div>
+                    </div>
+                    <div class="dz-details">
+                        <div class="dz-filename">
+                            <span data-dz-name></span>
+                        </div>
+                        <div class="dz-size" data-dz-size></div>
+                    </div>
+                    <div class="dz-progress">
+                        <span class="dz-upload" data-dz-uploadprogress></span>
+                    </div>
+                    <div class="dz-error-message">
+                        <span data-dz-errormessage></span>
+                    </div>
+                    <div class="dz-success-mark"><span>✓</span></div>
+                    <div class="dz-error-mark"><span>✗</span></div>
+                </div>
+            `,
             init: function() {
                 let myDropzone = this;
                 let certs = @json($company->certs);
@@ -127,7 +146,7 @@
                 });
 
                 this.on('removedfile', function(file) {
-                    axios.delete(`{{ config('app.url') }}/admin/certs/${file.id}`)
+                    axios.delete(`{{ env('APP_URL') }}/admin/companies/cert/{{ $company->id }}/${file.id}`)
                         .then(response => {
                             console.log(response.data);
                         })

@@ -14,6 +14,8 @@ class CompanyController extends Controller
 {
     public function index()
     {
+        Gate::authorize('read-companies');
+
         $companies = Company::where('user_id', Auth::id())->get();
 
         return view('admin.companies.index', compact('companies'));
@@ -28,6 +30,8 @@ class CompanyController extends Controller
 
     public function store(Request $request)
     {
+        Gate::authorize('create-companies');
+
         $data = $request->validate([
             'razon_social' => 'required|string',
             'ruc' => [
@@ -47,7 +51,7 @@ class CompanyController extends Controller
         $data['user_id'] = Auth::id();
 
         $company = Company::create($data);
-        
+
         session()->flash('swal', [
             'icon' => 'success',
             'title' => '¡Bien hecho!',
@@ -66,7 +70,9 @@ class CompanyController extends Controller
 
     public function update(Request $request, $company)
     {
-        $company = Company::where('ruc', $company)->where('user_id', Auth::id())->firstOrFail();
+        Gate::authorize('update-companies');
+
+        $company = Company::where('id', $company)->where('user_id', Auth::id())->firstOrFail();
 
         $data = $request->validate([
             'razon_social' => 'nullable|string|min:5',
@@ -77,40 +83,48 @@ class CompanyController extends Controller
                 new UniqueRucRule($company->id),
             ],
             'direccion' => 'nullable|string|min:5',
-            'logo' => 'nullable|image',
             'sol_user' => 'nullable|string|min:5',
             'sol_pass' => 'nullable|string|min:5',
-            'cert' => 'nullable|file|mimes:pem,txt',
             'client_id' => 'nullable|string',
             'client_secret' => 'nullable|string',
             'production' => 'nullable|boolean',
         ]);
 
-        if ($request->hasFile('logo')) {
-            $data['logo_path'] = $request->file('logo')->store('logos');
-        }
-
-        if ($request->hasFile('cert')) {
-            $data['cert_path'] = $request->file('cert')->store('certs');
-        }
-
         $company->update($data);
 
-        return response()->json(['message' => 'Compañía actualizada exitosamente', 'company' => $company], 200);
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => '¡Bien hecho!',
+            'text' => 'La compañía se ha actualizado correctamente'
+        ]);
+
+        return redirect()->route('admin.companies.edit', $company);
     }
 
     public function destroy($company)
     {
-        $company = Company::where('ruc', $company)->where('user_id', Auth::id())->firstOrFail();
+        Gate::authorize('delete-companies');
+
+        $company = Company::where('id', $company)->where('user_id', Auth::id())->firstOrFail();
 
         $company->delete();
 
-        return response()->json(['message' => 'Compañía eliminada exitosamente'], 200);
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => '¡Bien hecho!',
+            'text' => 'La compañía se ha eliminado correctamente'
+        ]);
+
+        return redirect()->route('admin.companies.index');
     }
 
     public function logo(Request $request, Company $company)
     {
         Gate::authorize('update-companies');
+
+        $request->validate([
+            'logo' => 'nullable|image'
+        ]);
 
         $image = $company->images()->create([
             'path' => Storage::put('/logos', $request->file('file')),
@@ -127,14 +141,48 @@ class CompanyController extends Controller
     {
         Gate::authorize('update-companies');
 
-        $cert = $company->certs()->create([
+        $request->validate([
+            'cert' => 'nullable|file|mimes:pem,txt'
+        ]);
+
+        $certificado = $company->certs()->create([
             'path' => Storage::put('/certs', $request->file('file')),
             'size' => $request->file('file')->getSize()
         ]);
 
         return response()->json([
-            'id' => $cert->id,
-            'path' => $cert->path
+            'id' => $certificado->id,
+            'path' => $certificado->path
+        ]);
+    }
+
+    public function destroyLogo(Company $company, $logo)
+    {
+        Gate::authorize('update-companies');
+
+        $image = $company->images()->where('id', $logo)->firstOrFail();
+
+        Storage::delete($image->path);
+
+        $image->delete();
+
+        return response()->json([
+            'message' => 'Logo eliminado correctamente'
+        ]);
+    }
+
+    public function destroyCert(Company $company, $cert)
+    {
+        Gate::authorize('update-companies');
+
+        $certificado = $company->certs()->where('id', $cert)->firstOrFail();
+
+        Storage::delete($certificado->path);
+
+        $certificado->delete();
+
+        return response()->json([
+            'message' => 'Certificado eliminado correctamente'
         ]);
     }
 }
