@@ -118,6 +118,13 @@ class CompanyController extends Controller
         return redirect()->route('admin.companies.index');
     }
 
+    public function import()
+    {
+        Gate::authorize('create-companies');
+
+        return view('admin.companies.import');
+    }
+
     public function logo(Request $request, Company $company)
     {
         Gate::authorize('update-companies');
