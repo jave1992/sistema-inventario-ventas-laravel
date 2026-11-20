@@ -25,7 +25,8 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             WarehouseSeeder::class,
             ReasonSeeeder::class,
-            RoleSeeder::class
+            RoleSeeder::class,
+            CompanySeeder::class,
         ]);
 
         Customer::factory(50)->create();
