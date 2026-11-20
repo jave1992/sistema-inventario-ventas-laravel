@@ -225,10 +225,10 @@ return [
                 'route' => 'admin.sunat.invoice',
                 'active' => 'admin.sunat.invoice',
                 'can' => [
-                    'read-invoice',
-                    'send-invoice',
-                    'xml-invoice',
-                    'pdf-invoice',
+                    'read-invoices',
+                    'send-invoices',
+                    'xml-invoices',
+                    'pdf-invoices',
                 ]
             ],
             [

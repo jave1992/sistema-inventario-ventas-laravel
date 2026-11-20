@@ -15,7 +15,8 @@ class Sale extends Model
         'customer_id',
         'warehouse_id',
         'total',
-        'observation'
+        'observation',
+        'company_id',
     ];
 
     protected $casts = [
@@ -46,5 +47,11 @@ class Sale extends Model
     public function inventories()
     {
         return $this->morphMany(Inventory::class, 'inventoryable');
+    }
+
+    // Relación uno a muchos inversa
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
     }
 }

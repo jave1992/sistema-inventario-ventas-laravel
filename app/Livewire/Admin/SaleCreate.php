@@ -3,9 +3,12 @@
 namespace App\Livewire\Admin;
 
 use App\Facades\Kardex;
+use App\Models\Customer;
+use App\Models\Invoice;
 use App\Models\Product;
 use App\Models\Quote;
 use App\Models\Sale;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class SaleCreate extends Component
@@ -15,6 +18,7 @@ class SaleCreate extends Component
     public $correlative;
     public $date;
     public $quote_id;
+    public $company_id;
     public $customer_id;
     public $warehouse_id;
     public $total = 0;
@@ -132,6 +136,7 @@ class SaleCreate extends Component
             'products.*.id' => 'required|exists:products,id',
             'products.*.quantity' => 'required|numeric|min:1',
             'products.*.price' => 'required|numeric|min:0',
+            'company_id' => 'required|exists:companies,id',
         ], [], [
             'voucher_type' => 'tipo de comprobante',
             'serie' => 'serie',
@@ -143,37 +148,55 @@ class SaleCreate extends Component
             'products.*.id' => 'producto',
             'products.*.quantity' => 'cantidad',
             'products.*.price' => 'precio',
+            'company_id' => 'compañía',
         ]);
 
-        $sale = Sale::create([
-            'voucher_type' => $this->voucher_type,
-            'serie' => $this->serie,
-            'correlative' => $this->correlative,
-            'date' => $this->date ?? now(),
-            'quote_id' => $this->quote_id,
-            'customer_id' => $this->customer_id,
-            'warehouse_id' => $this->warehouse_id,
-            'total' => $this->total,
-            'observation' => $this->observation,
-        ]);
-
-        foreach ($this->products as $product) {
-            $sale->products()->attach($product['id'], [
-                'quantity' => $product['quantity'],
-                'price' => $product['price'],
-                'subtotal' => $product['quantity'] * $product['price'],
+        DB::transaction(function () {
+            $sale = Sale::create([
+                'voucher_type' => $this->voucher_type,
+                'serie' => $this->serie,
+                'correlative' => $this->correlative,
+                'date' => $this->date ?? now(),
+                'quote_id' => $this->quote_id,
+                'customer_id' => $this->customer_id,
+                'warehouse_id' => $this->warehouse_id,
+                'total' => $this->total,
+                'observation' => $this->observation,
+                'company_id' => $this->company_id,
             ]);
 
-            // Kardex
+            $customer = Customer::where('identity_id', 4)->where('id', $this->customer_id)->first();
 
-            Kardex::registerExit($sale, $product, $this->warehouse_id, 'Venta');
-        }
+            if ($customer) {
+                Invoice::create([
+                    'serie' => $this->serie,
+                    'correlativo' => $this->correlative,
+                    'razon_social' => $customer->name,
+                    'ruc' => $customer->document_number,
+                    'total' => $this->total,
+                    'estado' => 0,
+                    'sale_id' => $sale->id,
+                ]);
+            }
 
-        session()->flash('swal', [
-            'icon' => 'success',
-            'title' => '¡Bien hecho!',
-            'text' => 'La venta se ha creado exitosamente.',
-        ]);
+            foreach ($this->products as $product) {
+                $sale->products()->attach($product['id'], [
+                    'quantity' => $product['quantity'],
+                    'price' => $product['price'],
+                    'subtotal' => $product['quantity'] * $product['price'],
+                ]);
+
+                // Kardex
+
+                Kardex::registerExit($sale, $product, $this->warehouse_id, 'Venta');
+            }
+
+            session()->flash('swal', [
+                'icon' => 'success',
+                'title' => '¡Bien hecho!',
+                'text' => 'La venta se ha creado exitosamente.',
+            ]);
+        });
 
         return redirect()->route('admin.sales.index');
     }

@@ -109,10 +109,10 @@ class RoleSeeder extends Seeder
             'delete-companies',
 
             // Facturas
-            'read-invoice',
-            'send-invoice',
-            'xml-invoice',
-            'pdf-invoice',
+            'read-invoices',
+            'send-invoices',
+            'xml-invoices',
+            'pdf-invoices',
 
             // Notas de crédito
             'read-note',
@@ -214,7 +214,7 @@ class RoleSeeder extends Seeder
             'read-companies',
 
             // Facturas
-            'read-invoice',
+            'read-invoices',
 
             // Notas de crédito
             'read-note',

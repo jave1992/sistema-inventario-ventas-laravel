@@ -19,12 +19,12 @@ return new class extends Migration
             $table->string('razon_social');
             $table->string('ruc');
             $table->decimal('total', 10, 2);
-            $table->date('fecha_envio');
+            $table->date('fecha_envio')->nullable();
             $table->string('estado');
-            $table->string('path_pdf');
-            $table->string('path_xml');
-            $table->string('path_cdr');
-            $table->string('hash');
+            $table->string('path_pdf')->nullable();
+            $table->string('path_xml')->nullable();
+            $table->string('path_cdr')->nullable();
+            $table->string('hash')->nullable();
             $table->foreignId('sale_id')->constrained()->onDelete('cascade');
 
             $table->timestamps();
