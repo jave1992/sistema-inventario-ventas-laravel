@@ -21,42 +21,54 @@
 }">
     <x-wire-card>
         <form wire:submit="save" class="space-y-4">
-            <div class="grid lg:grid-cols-4 gap-4">
-                <x-wire-native-select label="Tipo de comprobante" wire:model="voucher_type">
-                    <option value="1">Factura</option>
-                    <option value="2">Boleta</option>
-                </x-wire-native-select>
+            <div>
+                <div class="grid lg:grid-cols-4 gap-4">
+                    <x-wire-native-select label="Tipo de comprobante" wire:model="voucher_type">
+                        <option value="1">Factura</option>
+                        <option value="2">Boleta</option>
+                    </x-wire-native-select>
 
-                <div class="grid grid-cols-2 gap-2">
                     <x-wire-input label="Serie" wire:model="serie" placeholder="Serie del comprobante" disabled></x-wire-input>
 
                     <x-wire-input label="Correlativo" wire:model="correlative" placeholder="Correlativo del comprobante" disabled></x-wire-input>
+
+                    <x-wire-input label="Fecha" wire:model="date" type="date"></x-wire-input>
                 </div>
 
-                <x-wire-input label="Fecha" wire:model="date" type="date"></x-wire-input>
-
-                <x-wire-select label="Cotización" wire:model.live="quote_id"
-                    placeholder="Seleccione una cotización" :async-data="[
+                <div class="grid lg:grid-cols-4 gap-4">
+                    <div class="col-span-2">
+                        <x-wire-select label="Cotización" wire:model.live="quote_id"
+                            placeholder="Seleccione una cotización" :async-data="[
                         'api' => route('api.quotes.index'),
                         'method' => 'POST',
                     ]" option-label="name" option-value="id"
-                    option-description="description"></x-wire-select>
+                            option-description="description"></x-wire-select>
+                    </div>
+                    <div class="col-span-2">
+                        <x-wire-select label="Compañia" wire:model="company_id" placeholder="Seleccione una compañía"
+                            :async-data="[
+                            'api' => route('api.companies.index'),
+                            'method' => 'POST',
+                        ]" option-label="name" option-value="id"></x-wire-select>
+                    </div>
+                </div>
 
-                <div class="col-span-2">
-                    <x-wire-select label="Cliente" wire:model="customer_id" placeholder="Seleccione un cliente"
-                        :async-data="[
+                <div class="grid lg:grid-cols-4 gap-4">
+                    <div class="col-span-2">
+                        <x-wire-select label="Cliente" wire:model="customer_id" placeholder="Seleccione un cliente"
+                            :async-data="[
                             'api' => route('api.customers.index'),
                             'method' => 'POST',
                         ]" option-label="name" option-value="id"></x-wire-select>
-                </div>
-
-                <div class="col-span-2">
-                    <x-wire-select label="Almacén" wire:model="warehouse_id" placeholder="Seleccione un almacén"
-                        :async-data="[
+                    </div>
+                    <div class="col-span-2">
+                        <x-wire-select label="Almacén" wire:model="warehouse_id" placeholder="Seleccione un almacén"
+                            :async-data="[
                             'api' => route('api.warehouses.index'),
                             'method' => 'POST',
                         ]" option-label="name" option-value="id"
-                        option-description="description"></x-wire-select>
+                            option-description="description"></x-wire-select>
+                    </div>
                 </div>
             </div>
 

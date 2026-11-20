@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Company;
 use App\Models\Customer;
 use App\Models\Product;
 use App\Models\PurchaseOrder;
@@ -34,7 +35,7 @@ Route::post('/suppliers', function (Request $request) {
 })->name('api.suppliers.index');
 
 Route::post('/customers', function (Request $request) {
-    return Customer::select('*')
+    return Customer::selectRaw('id, CONCAT(name, " - ", document_number) as name')
         ->when($request->search, function ($query, $search) {
             $query->where('name', 'like', "%$search%")
                 ->orWhere('document_number', 'like', "%$search%");
@@ -142,3 +143,13 @@ Route::post('/reasons', function (Request $request) {
         ->where('type', $request->input('type', ''))
         ->get();
 })->name('api.reasons.index');
+
+Route::post('/companies', function (Request $request) {
+    return Company::selectRaw('id, CONCAT(razon_social, " - ", ruc) as name')
+        ->when($request->search, function ($query, $search) {
+            $query->where('razon_social', 'like', "%$search%")
+                ->orWhere('ruc', 'like', "%$search%");
+        })
+        ->when($request->exists('selected'), fn($query) => $query->whereIn('id', $request->input('selected')), fn($query) => $query->limit(10))
+        ->get();
+})->name('api.companies.index');

@@ -25,9 +25,13 @@ return new class extends Migration
             $table->string('path_xml');
             $table->string('path_cdr');
             $table->string('hash');
-            $table->foreignId('sale_id')->constrained()->onDelete('restrict');
+            $table->foreignId('sale_id')->constrained()->onDelete('cascade');
 
             $table->timestamps();
+        });
+
+        Schema::table('sales', function (Blueprint $table) {
+            $table->foreignId('company_id')->constrained()->onDelete('cascade');
         });
     }
 
