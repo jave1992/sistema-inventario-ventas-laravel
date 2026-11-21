@@ -81,13 +81,13 @@ Route::delete('companies/cert/{company}/{cert}', [CompanyController::class, 'des
 // Sunat
 
 // Invoices
-Route::get('sunat/invoice', [InvoiceController::class, 'index'])->name('sunat.invoice');
-Route::get('sunat/invoice/send', [InvoiceController::class, 'send'])->name('sunat.invoice.send');
-Route::get('sunat/invoice/xml', [InvoiceController::class, 'xml'])->name('sunat.invoice.xml');
-Route::get('sunat/invoice/pdf', [InvoiceController::class, 'pdf'])->name('sunat.invoice.pdf');
+Route::get('sunat/invoices', [InvoiceController::class, 'index'])->name('sunat.invoices');
+Route::get('sunat/invoices/send/{invoice}', [InvoiceController::class, 'send'])->name('sunat.invoices.send');
+Route::get('sunat/invoices/xml', [InvoiceController::class, 'xml'])->name('sunat.invoices.xml');
+Route::get('sunat/invoices/pdf', [InvoiceController::class, 'pdf'])->name('sunat.invoices.pdf');
 
 // Notes
-Route::get('sunat/note', [NoteController::class, 'index'])->name('sunat.note');
-Route::get('sunat/note/send', [NoteController::class, 'send'])->name('sunat.note.send');
-Route::get('sunat/note/xml', [NoteController::class, 'xml'])->name('sunat.note.xml');
-Route::get('sunat/note/pdf', [NoteController::class, 'pdf'])->name('sunat.note.pdf');
+Route::get('sunat/notes', [NoteController::class, 'index'])->name('sunat.notes');
+Route::get('sunat/notes/send/{note}', [NoteController::class, 'send'])->name('sunat.notes.send');
+Route::get('sunat/notes/xml', [NoteController::class, 'xml'])->name('sunat.notes.xml');
+Route::get('sunat/notes/pdf', [NoteController::class, 'pdf'])->name('sunat.notes.pdf');

@@ -35,7 +35,7 @@ class Company extends Model
     protected function cert(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->certs->count() ? Storage::url($this->certs->first()->path) : Storage::url('certs/no-cert.pem')
+            get: fn() => $this->certs->count() ? $this->certs->first()->path : 'certs/no-cert.pem'
         );
     }
 

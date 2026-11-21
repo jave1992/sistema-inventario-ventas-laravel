@@ -115,10 +115,10 @@ class RoleSeeder extends Seeder
             'pdf-invoices',
 
             // Notas de crédito
-            'read-note',
-            'send-note',
-            'xml-note',
-            'pdf-note',
+            'read-notes',
+            'send-notes',
+            'xml-notes',
+            'pdf-notes',
         ];
 
         foreach ($permissions as $permission) {
@@ -217,7 +217,7 @@ class RoleSeeder extends Seeder
             'read-invoices',
 
             // Notas de crédito
-            'read-note',
+            'read-notes',
         ]);
 
         User::factory()->create([
