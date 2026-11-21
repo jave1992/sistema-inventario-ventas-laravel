@@ -37,8 +37,8 @@ class InvoiceController extends Controller
             'ublVersion' => '2.1',
             'tipoOperacion' => '0101',
             'tipoDoc' => '01',
-            'serie' => $sale->series,
-            'correlativo' => $sale->correlativo,
+            'serie' => $sale->serie,
+            'correlativo' => $sale->correlative,
             'fechaEmision' => $sale->date->format('Y-m-d'),
             'tipoMoneda' => 'PEN',
             'company' => [
@@ -46,13 +46,13 @@ class InvoiceController extends Controller
                 'razonSocial' => $company->razon_social,
                 'nombreComercial' => null,
                 'address' => [
-                    "ubigueo" => "",
-                    "departamento" => "",
-                    "provincia" => "",
-                    "distrito" => "",
-                    "urbanizacion" => "-",
-                    "direccion" => "",
-                    "codLocal" => ""
+                    'ubigueo' => '150101',
+                    'departamento' => 'LIMA',
+                    'provincia' => 'LIMA',
+                    'distrito' => 'LIMA',
+                    'urbanizacion' => '-',
+                    'direccion' => 'calle falsa 123',
+                    'codLocal' => '0000'
                 ],
             ],
             'client' => [
@@ -63,19 +63,25 @@ class InvoiceController extends Controller
         ];
 
         $data['details'] = $sale->products->map(function ($product) {
+            $valorUnitario = (float) $product->price;
+
+            $baseImponible = round($valorUnitario * $product->pivot->quantity, 2);
+            $igv = round($baseImponible * 0.18, 2);
+            $precioUnitario = round($valorUnitario * 1.18, 2);
+
             return [
                 'tipAfeIgv' => 10,
                 'codProducto' => $product->sku,
                 'unidad' => 'NIU',
                 'descripcion' => $product->description,
                 'cantidad' => $product->pivot->quantity,
-                'mtoValorUnitario' => $product->price,
-                'mtoValorVenta' => $product->price * $product->pivot->quantity,
-                'mtoBaseIgv' => $product->price * $product->pivot->quantity,
+                'mtoValorUnitario' => $valorUnitario,
+                'mtoValorVenta' => $baseImponible,
+                'mtoBaseIgv' => $baseImponible,
                 'porcentajeIgv' => 18,
-                'igv' => 18,
-                'totalImpuestos' => 18,
-                'mtoPrecioUnitario' => $product->price * 1.18,
+                'igv' => $igv,
+                'totalImpuestos' => $igv,
+                'mtoPrecioUnitario' => $precioUnitario,
             ];
         });
 
@@ -96,8 +102,12 @@ class InvoiceController extends Controller
 
         $response['hash'] = (new XmlUtils)->getHashSign($see->getFactory()->getLastXml());
 
-        return response()->json([
-            'result' => $response,
-        ], 200);
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => '¡Éxito!',
+            'text' => $response['cdrResponse']['description']
+        ]);
+
+        return redirect()->route('admin.sunat.invoices');
     }
 }
