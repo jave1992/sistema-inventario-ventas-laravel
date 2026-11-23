@@ -348,6 +348,8 @@ class SunatService
                 $path_xml = 'invoices/' . $company->ruc . '/' . $invoice->getName() . '/' . $invoice->getName() . '.xml';
 
                 Storage::put($path_xml, $see->getFactory()->getLastXml());
+
+                return 'invoices/' . $company->ruc . '/' . $invoice->getName() . '/' . $invoice->getName() . '.xml';
             }
         }
     }
@@ -359,6 +361,8 @@ class SunatService
                 $path_cdr = 'invoices/' . $company->ruc . '/' . $invoice->getName() . '/' . $invoice->getName() . '.zip';
 
                 Storage::put($path_cdr, $result->getCdrZip());
+
+                return 'invoices/' . $company->ruc . '/' . $invoice->getName() . '/' . $invoice->getName() . '.zip';
             }
         }
     }
@@ -419,17 +423,16 @@ class SunatService
 
         $params = [
             'system' => [
-                'logo' => Storage::get($company->logo_path), // Logo de Empresa
-                'hash' => $hash, // Valor Resumen 
+                'logo' => Storage::get($company->image->path),
+                'hash' => $hash,
             ],
             'user' => [
-                'header'     => 'Telf: <b>(01) 123375</b>', // Texto que se ubica debajo de la dirección de empresa
+                'header'     => '',
                 'extras'     => [
-                    // Leyendas adicionales
                     ['name' => 'CONDICION DE PAGO', 'value' => 'Efectivo'],
-                    ['name' => 'VENDEDOR', 'value' => 'PRUEBA S.A.C.'],
+                    ['name' => 'VENDEDOR', 'value' => $company->razon_social],
                 ],
-                'footer' => '<p>Nro Resolucion: <b>3232323</b></p>'
+                'footer' => '<p></p>'
             ]
         ];
 
@@ -443,7 +446,7 @@ class SunatService
         $htmlReport->setTemplate($resolver->getTemplate($file));
 
         $report = new PdfReport($htmlReport);
-        // Options: Ver mas en https://wkhtmltopdf.org/usage/wkhtmltopdf.txt
+
         $report->setOptions([
             'no-outline',
             'viewport-size' => '1280x1024',
@@ -451,25 +454,23 @@ class SunatService
             'page-height' => '29.7cm',
         ]);
 
-        $report->setBinPath(env('WKHTMLTOPDF')); // Ruta relativa o absoluta de wkhtmltopdf
+        $report->setBinPath(env('WKHTMLTOPDF'));
 
         $ruc = $file->getCompany()->getRuc();
         $company = ModelsCompany::where('ruc', $ruc)->where('user_id', Auth::id())->first();
 
-        // Los mismo parametros utilizados en HTML Report
         $params = [
             'system' => [
-                'logo' => Storage::get($company->logo_path), // Logo de Empresa
-                'hash' => $hash, // Valor Resumen 
+                'logo' => Storage::get($company->image),
+                'hash' => $hash,
             ],
             'user' => [
-                'header'     => 'Telf: <b>(01) 123375</b>', // Texto que se ubica debajo de la dirección de empresa
+                'header'     => '',
                 'extras'     => [
-                    // Leyendas adicionales
                     ['name' => 'CONDICION DE PAGO', 'value' => 'Efectivo'],
-                    ['name' => 'VENDEDOR', 'value' => 'PRUEBA S.A.C.'],
+                    ['name' => 'VENDEDOR', 'value' => $company->razon_social],
                 ],
-                'footer' => '<p>Nro Resolucion: <b>3232323</b></p>'
+                'footer' => '<p></p>'
             ]
         ];
 
@@ -483,6 +484,8 @@ class SunatService
 
         if (!Storage::exists('pdf/' . $company->ruc . '/' . $file->getName() . '/' . $file->getName() . '.pdf')) {
             Storage::put('pdf/' . $company->ruc . '/' . $file->getName() . '/' . $file->getName() . '.pdf', $pdf);
+
+            return 'pdf/' . $company->ruc . '/' . $file->getName() . '/' . $file->getName() . '.pdf';
         }
     }
 }

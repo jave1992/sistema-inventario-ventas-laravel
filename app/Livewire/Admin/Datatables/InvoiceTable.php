@@ -50,7 +50,7 @@ class InvoiceTable extends DataTableComponent
             Column::make("Fecha de Envío", "fecha_envio")
                 ->sortable()
                 ->format(function ($value) {
-                    return $value ? $value->format('Y-m-d') : null;
+                    return $value ? $value->format('d-m-Y') : null;
                 }),
             Column::make("Acciones")->label(function ($row) {
                 return view('admin.invoices.actions', ['invoice' => $row]);

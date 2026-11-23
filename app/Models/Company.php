@@ -27,7 +27,7 @@ class Company extends Model
     protected function image(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->images->count() ? Storage::url($this->images->first()->path) : Storage::url('logos/no-image.jpeg')
+            get: fn() => $this->images->count() ? $this->images->first()->path : ''
         );
     }
 
