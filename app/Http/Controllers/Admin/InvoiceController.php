@@ -119,19 +119,28 @@ class InvoiceController extends Controller
 
             $path_pdf = $sunat->generatePdfReport($invoice, $response['hash']);
 
-            session()->flash('swal', [
-                'icon' => 'success',
-                'title' => '¡Éxito!',
-                'text' => $response['cdrResponse']['description']
-            ]);
+            if ($response['success'] == true) {
+                session()->flash('swal', [
+                    'icon' => 'success',
+                    'title' => '¡Éxito!',
+                    'text' => $response['cdrResponse']['description']
+                ]);
 
-            $invoice_tmp->update([
-                'hash' => $response['hash'],
-                'fecha_envio' => now(),
-                'path_pdf' => $path_pdf,
-                'path_xml' => $path_xml,
-                'path_cdr' => $path_cdr,
-            ]);
+                $invoice_tmp->update([
+                    'hash' => $response['hash'],
+                    'fecha_envio' => now(),
+                    'estado' => 1,
+                    'path_pdf' => $path_pdf,
+                    'path_xml' => $path_xml,
+                    'path_cdr' => $path_cdr,
+                ]);
+            } else {
+                session()->flash('swal', [
+                    'icon' => 'error',
+                    'title' => '¡Error!',
+                    'text' => $response['error']['message']
+                ]);
+            }
         });
 
         return redirect()->route('admin.sunat.invoices');
