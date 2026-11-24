@@ -89,7 +89,7 @@ Route::get('sunat/invoices/pdf/{invoice}', [InvoiceController::class, 'pdf'])->n
 
 // Notes
 Route::get('sunat/notes', [NoteController::class, 'index'])->name('sunat.notes');
-Route::get('sunat/notes/send/{note}', [NoteController::class, 'send'])->name('sunat.notes.send');
+Route::get('sunat/notes/send/{invoice}', [NoteController::class, 'send'])->name('sunat.notes.send');
 Route::get('sunat/notes/xml/{note}', [NoteController::class, 'xml'])->name('sunat.notes.xml');
 Route::get('sunat/notes/cdr/{note}', [NoteController::class, 'cdr'])->name('sunat.notes.cdr');
 Route::get('sunat/notes/pdf/{note}', [NoteController::class, 'pdf'])->name('sunat.notes.pdf');

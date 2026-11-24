@@ -65,7 +65,6 @@ return [
             [
                 'type' => 'link',
                 'title' => 'Proveedores',
-                'icon' => 'fa-solid fa-users',
                 'route' => 'admin.suppliers.index',
                 'active' => 'admin.suppliers.*',
                 'can' => [
@@ -110,7 +109,6 @@ return [
             [
                 'type' => 'link',
                 'title' => 'Clientes',
-                'icon' => 'fa-solid fa-users',
                 'route' => 'admin.customers.index',
                 'active' => 'admin.customers.*',
                 'can' => [
@@ -217,7 +215,7 @@ return [
         'type' => 'group',
         'title' => 'Sunat',
         'icon' => 'fa-solid fa-exchange-alt',
-        'active' => ['admin.sunat.invoices.*', 'admin.sunat.notes.*'],
+        'active' => ['admin.sunat.invoices', 'admin.sunat.invoices.send', 'admin.sunat.invoices.xml', 'admin.sunat.invoices.cdr', 'admin.sunat.invoices.pdf', 'admin.sunat.notes', 'admin.sunat.notes.send', 'admin.sunat.notes.xml', 'admin.sunat.notes.cdr'],
         'items' => [
             [
                 'type' => 'link',

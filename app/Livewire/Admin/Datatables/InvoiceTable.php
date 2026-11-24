@@ -58,6 +58,8 @@ class InvoiceTable extends DataTableComponent
                     if ($value == 1) {
                         return '<span class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">Aceptado</span>';
                     } elseif ($value == 2) {
+                        return '<span class="inline-flex items-center rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800">Anulado</span>';
+                    } else if($value == 3) {
                         return '<span class="inline-flex items-center rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800">Rechazado</span>';
                     } else {
                         return '<span class="inline-flex items-center rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-800">Pendiente</span>';

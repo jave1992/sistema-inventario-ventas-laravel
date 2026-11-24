@@ -374,6 +374,8 @@ class SunatService
                 $path_xml = 'notes/' . $company->ruc . '/' . $note->getName() . '/' . $note->getName() . '.xml';
 
                 Storage::put($path_xml, $see->getFactory()->getLastXml());
+
+                return 'notes/' . $company->ruc . '/' . $note->getName() . '/' . $note->getName() . '.xml';
             }
         }
     }
@@ -385,6 +387,8 @@ class SunatService
                 $path_cdr = 'notes/' . $company->ruc . '/' . $note->getName() . '/' . $note->getName() . '.zip';
 
                 Storage::put($path_cdr, $result->getCdrZip());
+
+                return 'notes/' . $company->ruc . '/' . $note->getName() . '/' . $note->getName() . '.zip';
             }
         }
     }
@@ -396,6 +400,8 @@ class SunatService
                 $path_xml = 'despatches/' . $company->ruc . '/' . $despatch->getName() . '/' . $despatch->getName() . '.xml';
 
                 Storage::put($path_xml, $api->getLastXml());
+
+                return 'despatches/' . $company->ruc . '/' . $despatch->getName() . '/' . $despatch->getName() . '.xml';
             }
         }
     }
@@ -407,6 +413,8 @@ class SunatService
                 $path_cdr = 'despatches/' . $company->ruc . '/' . $despatch->getName() . '/' . $despatch->getName() . '.zip';
 
                 Storage::put($path_cdr, $result->getCdrZip());
+
+                return 'despatches/' . $company->ruc . '/' . $despatch->getName() . '/' . $despatch->getName() . '.zip';
             }
         }
     }

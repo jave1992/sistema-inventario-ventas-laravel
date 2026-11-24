@@ -30,4 +30,10 @@ class Invoice extends Model
     {
         return $this->belongsTo(Sale::class);
     }
+
+    // Relación uno a muchos
+    public function note()
+    {
+        return $this->hasMany(Note::class);
+    }
 }

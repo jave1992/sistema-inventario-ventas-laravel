@@ -1,6 +1,6 @@
 <div class="flex items-center space-x-4">
     @can('read-invoices')
-    @if(in_array($invoice->estado, [0, 2]))
+    @if($invoice->estado == 0)
     <x-wire-button blue href="{{ route('admin.sunat.invoices.send', $invoice) }}">
         <i class="fa-solid fa-paper-plane"></i> Enviar
     </x-wire-button>
