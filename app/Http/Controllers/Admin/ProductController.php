@@ -11,9 +11,6 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         Gate::authorize('read-products');
@@ -21,9 +18,6 @@ class ProductController extends Controller
         return view('admin.products.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         Gate::authorize('create-products');
@@ -33,9 +27,6 @@ class ProductController extends Controller
         return view('admin.products.create', compact('categories'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         Gate::authorize('create-products');
@@ -59,9 +50,6 @@ class ProductController extends Controller
         return view('admin.products.edit', compact('product'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Product $product)
     {
         Gate::authorize('update-products');
@@ -71,9 +59,6 @@ class ProductController extends Controller
         return view('admin.products.edit', compact('product', 'categories'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Product $product)
     {
         Gate::authorize('update-products');
@@ -86,7 +71,7 @@ class ProductController extends Controller
             'min_stock' => 'required|integer|min:0'
         ]);
 
-        $product = Product::create($data);
+        $product->update($data);
 
         session()->flash('swal', [
             'icon' => 'success',
@@ -97,9 +82,6 @@ class ProductController extends Controller
         return redirect()->route('admin.products.edit', $product);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Product $product)
     {
         Gate::authorize('delete-products');

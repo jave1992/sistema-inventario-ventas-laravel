@@ -165,15 +165,6 @@ class NoteController extends Controller
 
     public function pdf(Note $note)
     {
-        /* return Storage::response(
-            $note->path_pdf,
-            'note.pdf',
-            [
-                'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'inline',
-            ]
-        ); */
-
         return Storage::download($note->path_pdf, 'note.pdf');
     }
 
