@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\QuoteController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SaleController;
+use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Admin\TransferController;
 use App\Http\Controllers\Admin\UserController;
@@ -92,3 +93,11 @@ Route::get('sunat/notes/send/{invoice}', [NoteController::class, 'send'])->name(
 Route::get('sunat/notes/xml/{note}', [NoteController::class, 'xml'])->name('sunat.notes.xml');
 Route::get('sunat/notes/cdr/{note}', [NoteController::class, 'cdr'])->name('sunat.notes.cdr');
 Route::get('sunat/notes/pdf/{note}', [NoteController::class, 'pdf'])->name('sunat.notes.pdf');
+
+// Settings
+Route::get('settings', [SettingsController::class, 'index'])->name('settings.index');
+Route::put('settings/general', [SettingsController::class, 'updateGeneral'])->name('settings.general.update');
+Route::put('settings/perfil', [SettingsController::class, 'updateProfile'])->name('settings.profile.update');
+Route::put('settings/seguridad', [SettingsController::class, 'updateSecurity'])->name('settings.security.update');
+Route::put('settings/apariencia', [SettingsController::class, 'updateAppearance'])->name('settings.appearance.update');
+Route::post('settings/respaldo', [SettingsController::class, 'backup'])->name('settings.backup');

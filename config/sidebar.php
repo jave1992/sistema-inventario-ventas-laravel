@@ -295,6 +295,8 @@ return [
         'type' => 'link',
         'title' => 'Ajustes',
         'icon' => 'fa-solid fa-cogs',
+        'route' => 'admin.settings.index',
+        'active' => 'admin.settings.*',
         'can' => [
             'read-settings',
             'update-settings',

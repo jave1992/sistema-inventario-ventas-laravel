@@ -23,6 +23,7 @@
         "luecano/numero-a-letras": "^4.1",
         "maatwebsite/excel": "^3.1",
         "rappasoft/laravel-livewire-tables": "^3.7",
+        "spatie/laravel-backup": "^9.3",
         "spatie/laravel-permission": "^6.25",
         "wireui/wireui": "^2.4"
     },
